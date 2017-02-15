@@ -1,0 +1,22 @@
+{
+  "name": "typedoc-transformer",
+  "version": "0.0.1",
+  "description": "Transform typedoc JSON",
+  "license": "MIT",
+  "main": "main.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/asakusuma/typedoc-transformer"
+  },
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "author": {
+    "name": "Asa Kusuma"
+  },
+  "homepage": "https://github.com/asakusuma/typedoc-transformer",
+  "dependencies": {
+    "jsonfile": "^2.4.0"
+  }
+}

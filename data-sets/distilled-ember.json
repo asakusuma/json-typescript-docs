@@ -1,0 +1,91 @@
+{
+    "id": "ember-2.10.0-Ember.Application",
+    "type": "class",
+    "attributes": {
+        "name": "Ember.Application",
+        "shortname": "Ember.Application",
+        "module": "ember",
+        "submodule": "ember-application",
+        "namespace": "Ember",
+        "file": "packages/ember-application/lib/system/application.js",
+        "line": 49,
+        "description": "ill be invoked immediately before routing\nbegins.</p>\n",
+        "extends": "Ember.Engine",
+        "uses": [
+        "RegistryProxyMixin"
+        ],
+        "access": "public",
+        "tagname": "",
+        "version": "2.10.0",
+        "since": "1.0.0",
+        "methods": [
+        {
+            "file": "packages/ember-application/lib/system/application.js",
+            "line": 371,
+            "description": "<p>Create an ApplicationInstance for this application.</p>\n",
+            "access": "private",
+            "tagname": "",
+            "itemtype": "method",
+            "name": "buildInstance",
+            "params": [
+            {
+                "name": "url",
+                "description": "The initial URL to navigate to",
+                "type": "String"
+            },
+            {
+                "name": "options",
+                "description": "",
+                "type": "Ember.ApplicationInstance.BootOptions"
+            }
+            ],
+            "return": {
+            "description": "the application instance",
+            "type": "Ember.ApplicationInstance"
+            },
+            "class": "Ember.Application",
+            "module": "ember",
+            "submodule": "ember-application",
+            "namespace": "Ember",
+            "version": "2.10.0",
+            "since": "1.11.0"
+        }
+        ],
+        "events": [
+        {
+            "file": "packages/ember-application/lib/system/application.js",
+            "line": 755,
+            "description": "<p>Called when the Application has become ready, immediately before routing\nbegins. The call will be delayed until the DOM has become ready.</p>\n",
+            "itemtype": "event",
+            "name": "ready",
+            "access": "public",
+            "tagname": "",
+            "class": "Ember.Application",
+            "module": "ember",
+            "submodule": "ember-application",
+            "namespace": "Ember",
+            "version": "2.10.0",
+            "since": "1.0.0"
+        }
+        ],
+        "properties": [
+        {
+            "file": "packages/ember-application/lib/system/application.js",
+            "line": 208,
+            "description": "<p>The root DOM element of the Application. This can be specified as an\nelement or a\n<a href=\"http://api.jquery.com/category/selectors/\">jQuery-compatible selector string</a>.</p>\n<p>This is the element that will be passed to the Application&apos;s,\n<code>eventDispatcher</code>, which sets up the listeners for event delegation. Every\nview in your application should be a child of the element you specify here.</p>\n",
+            "itemtype": "property",
+            "name": "rootElement",
+            "type": "DOMElement",
+            "default": "'body'",
+            "access": "public",
+            "tagname": "",
+            "class": "Ember.Application",
+            "module": "ember",
+            "submodule": "ember-application",
+            "namespace": "Ember",
+            "version": "2.10.0",
+            "since": "1.0.0"
+        }
+        ]
+    }
+}
