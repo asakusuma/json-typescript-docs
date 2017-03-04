@@ -16,5 +16,11 @@ typedoc --json output.json src/
 
 ```
 cd typedoc-transformer
-node main.js path/to/typedoc.json path/to/output.json
+npm run exec path/to/typedoc.json path/to/output.json
+```
+
+## Examples
+
+```
+npm run exec data-sets/glimmer-resolver-files.json output/out.json 
 ```

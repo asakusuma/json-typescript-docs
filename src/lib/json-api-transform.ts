@@ -5,10 +5,9 @@ import {
 } from './doc-interfaces';
 
 import {
-  resourceToIdentifier
+  slugify
 } from './json-api-utils';
 
-import slug from 'slug';
 import transformProjects from './transform-projects';
 
 export default function jsonApiTransform(manifest: DocSetManifest, typeDocJsonObjects: TypeDocFilesJson[]): DocSetJsonApi {
@@ -20,7 +19,7 @@ export default function jsonApiTransform(manifest: DocSetManifest, typeDocJsonOb
 
   return {
     data: {
-      id: slug(manifest.title),
+      id: slugify(manifest.title),
       type: 'docset',
       attributes: manifest,
       relationships: {

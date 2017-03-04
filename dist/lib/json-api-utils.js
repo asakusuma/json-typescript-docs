@@ -7,3 +7,7 @@ function resourceToIdentifier(obj) {
     };
 }
 exports.resourceToIdentifier = resourceToIdentifier;
+function slugify(str) {
+    return str.replace(' ', '-').toLocaleLowerCase();
+}
+exports.slugify = slugify;

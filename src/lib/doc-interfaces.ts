@@ -12,7 +12,14 @@ export interface DocSetJsonApi {
   included?: Array<ResourceObject>;
 }
 
-export interface TypeDocFilesJson {}
+export interface TypeDocFilesJson {
+  name: string,
+  id: number,
+  kind: number,
+  flags: Object,
+  children: any[]
+  groups: any[]
+}
 
 export interface ProjectDoc extends ResourceObject {
   attributes: {

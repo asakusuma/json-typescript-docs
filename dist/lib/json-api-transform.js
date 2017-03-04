@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var slug_1 = require("slug");
+var json_api_utils_1 = require("./json-api-utils");
 var transform_projects_1 = require("./transform-projects");
 function jsonApiTransform(manifest, typeDocJsonObjects) {
     var _a = transform_projects_1.default(typeDocJsonObjects), roots = _a.roots, resources = _a.resources;
     return {
         data: {
-            id: slug_1.default(manifest.title),
+            id: json_api_utils_1.slugify(manifest.title),
             type: 'docset',
             attributes: manifest,
             relationships: {

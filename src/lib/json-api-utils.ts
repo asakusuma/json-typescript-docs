@@ -8,3 +8,7 @@ export function resourceToIdentifier(obj: ResourceObject): ResourceIdentifierObj
     type: obj.type
   };
 }
+
+export function slugify(str: string) {
+  return str.replace(' ', '-').toLocaleLowerCase();
+}
