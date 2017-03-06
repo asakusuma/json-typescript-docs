@@ -27,10 +27,12 @@ export default function(typeDocJsonObjects: TypeDocFilesJson[]): ProjectObject {
       attributes: {
         name: tdObj.name
       }
-    } 
+    };
 
     roots.push(project);
     resources.push(project);
+
+    console.log(tdObj);
   }
 
   return {

@@ -1,0 +1,1253 @@
+{
+	"id": 0,
+	"name": "@glimmer/resolver",
+	"kind": 0,
+	"flags": {},
+	"children": [
+		{
+			"id": 53,
+			"name": "BasicRegistry",
+			"kind": 128,
+			"kindString": "Class",
+			"flags": {
+				"isExported": true,
+				"isExternal": true
+			},
+			"children": [
+				{
+					"id": 55,
+					"name": "constructor",
+					"kind": 512,
+					"kindString": "Constructor",
+					"flags": {
+						"isExported": true,
+						"isExternal": true
+					},
+					"signatures": [
+						{
+							"id": 56,
+							"name": "new BasicRegistry",
+							"kind": 16384,
+							"kindString": "Constructor signature",
+							"flags": {},
+							"parameters": [
+								{
+									"id": 57,
+									"name": "entries",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reference",
+										"name": "Dict"
+									},
+									"defaultValue": " dict<any>()"
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "BasicRegistry",
+								"id": 53
+							}
+						}
+					],
+					"sources": [
+						{
+							"fileName": "module-registries/basic-registry.ts",
+							"line": 5,
+							"character": 30
+						}
+					]
+				},
+				{
+					"id": 54,
+					"name": "_entries",
+					"kind": 1024,
+					"kindString": "Property",
+					"flags": {
+						"isPrivate": true,
+						"isExported": true,
+						"isExternal": true
+					},
+					"sources": [
+						{
+							"fileName": "module-registries/basic-registry.ts",
+							"line": 5,
+							"character": 18
+						}
+					],
+					"type": {
+						"type": "reference",
+						"name": "Dict"
+					}
+				},
+				{
+					"id": 61,
+					"name": "get",
+					"kind": 2048,
+					"kindString": "Method",
+					"flags": {
+						"isExported": true,
+						"isExternal": true
+					},
+					"signatures": [
+						{
+							"id": 62,
+							"name": "get",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"parameters": [
+								{
+									"id": 63,
+									"name": "specifier",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "instrinct",
+										"name": "string"
+									}
+								}
+							],
+							"type": {
+								"type": "instrinct",
+								"name": "any"
+							},
+							"implementationOf": {
+								"type": "reference",
+								"name": "ModuleRegistry.get",
+								"id": 10
+							}
+						}
+					],
+					"sources": [
+						{
+							"fileName": "module-registries/basic-registry.ts",
+							"line": 15,
+							"character": 5
+						}
+					],
+					"implementationOf": {
+						"type": "reference",
+						"name": "ModuleRegistry.get",
+						"id": 9
+					}
+				},
+				{
+					"id": 58,
+					"name": "has",
+					"kind": 2048,
+					"kindString": "Method",
+					"flags": {
+						"isExported": true,
+						"isExternal": true
+					},
+					"signatures": [
+						{
+							"id": 59,
+							"name": "has",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"parameters": [
+								{
+									"id": 60,
+									"name": "specifier",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "instrinct",
+										"name": "string"
+									}
+								}
+							],
+							"type": {
+								"type": "instrinct",
+								"name": "boolean"
+							},
+							"implementationOf": {
+								"type": "reference",
+								"name": "ModuleRegistry.has",
+								"id": 7
+							}
+						}
+					],
+					"sources": [
+						{
+							"fileName": "module-registries/basic-registry.ts",
+							"line": 11,
+							"character": 5
+						}
+					],
+					"implementationOf": {
+						"type": "reference",
+						"name": "ModuleRegistry.has",
+						"id": 6
+					}
+				}
+			],
+			"groups": [
+				{
+					"title": "Constructors",
+					"kind": 512,
+					"children": [
+						55
+					]
+				},
+				{
+					"title": "Properties",
+					"kind": 1024,
+					"children": [
+						54
+					]
+				},
+				{
+					"title": "Methods",
+					"kind": 2048,
+					"children": [
+						61,
+						58
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "module-registries/basic-registry.ts",
+					"line": 4,
+					"character": 34
+				}
+			],
+			"implementedTypes": [
+				{
+					"type": "reference",
+					"name": "ModuleRegistry",
+					"id": 5
+				}
+			]
+		},
+		{
+			"id": 29,
+			"name": "Resolver",
+			"kind": 128,
+			"kindString": "Class",
+			"flags": {
+				"isExported": true,
+				"isExternal": true
+			},
+			"children": [
+				{
+					"id": 32,
+					"name": "constructor",
+					"kind": 512,
+					"kindString": "Constructor",
+					"flags": {
+						"isExported": true,
+						"isExternal": true
+					},
+					"signatures": [
+						{
+							"id": 33,
+							"name": "new Resolver",
+							"kind": 16384,
+							"kindString": "Constructor signature",
+							"flags": {},
+							"parameters": [
+								{
+									"id": 34,
+									"name": "config",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reference",
+										"name": "ResolverConfiguration",
+										"id": 24
+									}
+								},
+								{
+									"id": 35,
+									"name": "registry",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reference",
+										"name": "ModuleRegistry",
+										"id": 5
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Resolver",
+								"id": 29
+							}
+						}
+					],
+					"sources": [
+						{
+							"fileName": "resolver.ts",
+							"line": 15,
+							"character": 34
+						}
+					]
+				},
+				{
+					"id": 30,
+					"name": "config",
+					"kind": 1024,
+					"kindString": "Property",
+					"flags": {
+						"isExported": true,
+						"isExternal": true,
+						"isPublic": true
+					},
+					"sources": [
+						{
+							"fileName": "resolver.ts",
+							"line": 14,
+							"character": 15
+						}
+					],
+					"type": {
+						"type": "reference",
+						"name": "ResolverConfiguration",
+						"id": 24
+					}
+				},
+				{
+					"id": 31,
+					"name": "registry",
+					"kind": 1024,
+					"kindString": "Property",
+					"flags": {
+						"isExported": true,
+						"isExternal": true,
+						"isPublic": true
+					},
+					"sources": [
+						{
+							"fileName": "resolver.ts",
+							"line": 15,
+							"character": 17
+						}
+					],
+					"type": {
+						"type": "reference",
+						"name": "ModuleRegistry",
+						"id": 5
+					}
+				},
+				{
+					"id": 47,
+					"name": "_definitiveCollection",
+					"kind": 2048,
+					"kindString": "Method",
+					"flags": {
+						"isPrivate": true,
+						"isExported": true,
+						"isExternal": true
+					},
+					"signatures": [
+						{
+							"id": 48,
+							"name": "_definitiveCollection",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"parameters": [
+								{
+									"id": 49,
+									"name": "type",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "instrinct",
+										"name": "string"
+									}
+								}
+							],
+							"type": {
+								"type": "instrinct",
+								"name": "string"
+							}
+						}
+					],
+					"sources": [
+						{
+							"fileName": "resolver.ts",
+							"line": 105,
+							"character": 31
+						}
+					]
+				},
+				{
+					"id": 50,
+					"name": "_serializeAndVerify",
+					"kind": 2048,
+					"kindString": "Method",
+					"flags": {
+						"isPrivate": true,
+						"isExported": true,
+						"isExternal": true
+					},
+					"signatures": [
+						{
+							"id": 51,
+							"name": "_serializeAndVerify",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"parameters": [
+								{
+									"id": 52,
+									"name": "specifier",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reference",
+										"name": "Specifier"
+									}
+								}
+							],
+							"type": {
+								"type": "instrinct",
+								"name": "string"
+							}
+						}
+					],
+					"sources": [
+						{
+							"fileName": "resolver.ts",
+							"line": 111,
+							"character": 29
+						}
+					]
+				},
+				{
+					"id": 36,
+					"name": "identify",
+					"kind": 2048,
+					"kindString": "Method",
+					"flags": {
+						"isExported": true,
+						"isExternal": true
+					},
+					"signatures": [
+						{
+							"id": 37,
+							"name": "identify",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"parameters": [
+								{
+									"id": 38,
+									"name": "specifier",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "instrinct",
+										"name": "string"
+									}
+								},
+								{
+									"id": 39,
+									"name": "referrer",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {
+										"isOptional": true
+									},
+									"type": {
+										"type": "instrinct",
+										"name": "string"
+									}
+								}
+							],
+							"type": {
+								"type": "instrinct",
+								"name": "string"
+							}
+						}
+					],
+					"sources": [
+						{
+							"fileName": "resolver.ts",
+							"line": 22,
+							"character": 10
+						}
+					]
+				},
+				{
+					"id": 43,
+					"name": "resolve",
+					"kind": 2048,
+					"kindString": "Method",
+					"flags": {
+						"isExported": true,
+						"isExternal": true
+					},
+					"signatures": [
+						{
+							"id": 44,
+							"name": "resolve",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"parameters": [
+								{
+									"id": 45,
+									"name": "specifier",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "instrinct",
+										"name": "string"
+									}
+								},
+								{
+									"id": 46,
+									"name": "referrer",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {
+										"isOptional": true
+									},
+									"type": {
+										"type": "instrinct",
+										"name": "string"
+									}
+								}
+							],
+							"type": {
+								"type": "instrinct",
+								"name": "any"
+							}
+						}
+					],
+					"sources": [
+						{
+							"fileName": "resolver.ts",
+							"line": 98,
+							"character": 9
+						}
+					]
+				},
+				{
+					"id": 40,
+					"name": "retrieve",
+					"kind": 2048,
+					"kindString": "Method",
+					"flags": {
+						"isExported": true,
+						"isExternal": true
+					},
+					"signatures": [
+						{
+							"id": 41,
+							"name": "retrieve",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"parameters": [
+								{
+									"id": 42,
+									"name": "specifier",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "instrinct",
+										"name": "string"
+									}
+								}
+							],
+							"type": {
+								"type": "instrinct",
+								"name": "any"
+							}
+						}
+					],
+					"sources": [
+						{
+							"fileName": "resolver.ts",
+							"line": 94,
+							"character": 10
+						}
+					]
+				}
+			],
+			"groups": [
+				{
+					"title": "Constructors",
+					"kind": 512,
+					"children": [
+						32
+					]
+				},
+				{
+					"title": "Properties",
+					"kind": 1024,
+					"children": [
+						30,
+						31
+					]
+				},
+				{
+					"title": "Methods",
+					"kind": 2048,
+					"children": [
+						47,
+						50,
+						36,
+						43,
+						40
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "resolver.ts",
+					"line": 13,
+					"character": 29
+				}
+			],
+			"implementedTypes": [
+				{
+					"type": "reference",
+					"name": "Resolver"
+				}
+			]
+		},
+		{
+			"id": 18,
+			"name": "ModuleCollectionDefinition",
+			"kind": 256,
+			"kindString": "Interface",
+			"flags": {
+				"isExported": true,
+				"isExternal": true
+			},
+			"children": [
+				{
+					"id": 21,
+					"name": "defaultType",
+					"kind": 1024,
+					"kindString": "Property",
+					"flags": {
+						"isExported": true,
+						"isExternal": true,
+						"isOptional": true
+					},
+					"sources": [
+						{
+							"fileName": "resolver-configuration.ts",
+							"line": 40,
+							"character": 13
+						}
+					],
+					"type": {
+						"type": "instrinct",
+						"name": "string"
+					}
+				},
+				{
+					"id": 19,
+					"name": "group",
+					"kind": 1024,
+					"kindString": "Property",
+					"flags": {
+						"isExported": true,
+						"isExternal": true,
+						"isOptional": true
+					},
+					"sources": [
+						{
+							"fileName": "resolver-configuration.ts",
+							"line": 38,
+							"character": 7
+						}
+					],
+					"type": {
+						"type": "instrinct",
+						"name": "string"
+					}
+				},
+				{
+					"id": 22,
+					"name": "privateCollections",
+					"kind": 1024,
+					"kindString": "Property",
+					"flags": {
+						"isExported": true,
+						"isExternal": true,
+						"isOptional": true
+					},
+					"sources": [
+						{
+							"fileName": "resolver-configuration.ts",
+							"line": 41,
+							"character": 20
+						}
+					],
+					"type": {
+						"type": "instrinct",
+						"isArray": true,
+						"name": "string"
+					}
+				},
+				{
+					"id": 20,
+					"name": "types",
+					"kind": 1024,
+					"kindString": "Property",
+					"flags": {
+						"isExported": true,
+						"isExternal": true,
+						"isOptional": true
+					},
+					"sources": [
+						{
+							"fileName": "resolver-configuration.ts",
+							"line": 39,
+							"character": 7
+						}
+					],
+					"type": {
+						"type": "instrinct",
+						"isArray": true,
+						"name": "string"
+					}
+				},
+				{
+					"id": 23,
+					"name": "unresolvable",
+					"kind": 1024,
+					"kindString": "Property",
+					"flags": {
+						"isExported": true,
+						"isExternal": true,
+						"isOptional": true
+					},
+					"sources": [
+						{
+							"fileName": "resolver-configuration.ts",
+							"line": 42,
+							"character": 14
+						}
+					],
+					"type": {
+						"type": "instrinct",
+						"name": "boolean"
+					}
+				}
+			],
+			"groups": [
+				{
+					"title": "Properties",
+					"kind": 1024,
+					"children": [
+						21,
+						19,
+						22,
+						20,
+						23
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "resolver-configuration.ts",
+					"line": 37,
+					"character": 43
+				}
+			]
+		},
+		{
+			"id": 5,
+			"name": "ModuleRegistry",
+			"kind": 256,
+			"kindString": "Interface",
+			"flags": {
+				"isExported": true,
+				"isExternal": true
+			},
+			"children": [
+				{
+					"id": 9,
+					"name": "get",
+					"kind": 2048,
+					"kindString": "Method",
+					"flags": {
+						"isExported": true,
+						"isExternal": true
+					},
+					"signatures": [
+						{
+							"id": 10,
+							"name": "get",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"parameters": [
+								{
+									"id": 11,
+									"name": "specifier",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "instrinct",
+										"name": "string"
+									}
+								}
+							],
+							"type": {
+								"type": "instrinct",
+								"name": "any"
+							}
+						}
+					],
+					"sources": [
+						{
+							"fileName": "module-registry.ts",
+							"line": 4,
+							"character": 5
+						}
+					]
+				},
+				{
+					"id": 6,
+					"name": "has",
+					"kind": 2048,
+					"kindString": "Method",
+					"flags": {
+						"isExported": true,
+						"isExternal": true
+					},
+					"signatures": [
+						{
+							"id": 7,
+							"name": "has",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"parameters": [
+								{
+									"id": 8,
+									"name": "specifier",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "instrinct",
+										"name": "string"
+									}
+								}
+							],
+							"type": {
+								"type": "instrinct",
+								"name": "boolean"
+							}
+						}
+					],
+					"sources": [
+						{
+							"fileName": "module-registry.ts",
+							"line": 2,
+							"character": 5
+						}
+					]
+				}
+			],
+			"groups": [
+				{
+					"title": "Methods",
+					"kind": 2048,
+					"children": [
+						9,
+						6
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "module-registry.ts",
+					"line": 1,
+					"character": 31
+				}
+			],
+			"implementedBy": [
+				{
+					"type": "reference",
+					"name": "BasicRegistry",
+					"id": 53
+				}
+			]
+		},
+		{
+			"id": 16,
+			"name": "ModuleTypeDefinition",
+			"kind": 256,
+			"kindString": "Interface",
+			"flags": {
+				"isExported": true,
+				"isExternal": true
+			},
+			"children": [
+				{
+					"id": 17,
+					"name": "definitiveCollection",
+					"kind": 1024,
+					"kindString": "Property",
+					"flags": {
+						"isExported": true,
+						"isExternal": true,
+						"isOptional": true
+					},
+					"sources": [
+						{
+							"fileName": "resolver-configuration.ts",
+							"line": 34,
+							"character": 22
+						}
+					],
+					"type": {
+						"type": "instrinct",
+						"name": "string"
+					}
+				}
+			],
+			"groups": [
+				{
+					"title": "Properties",
+					"kind": 1024,
+					"children": [
+						17
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "resolver-configuration.ts",
+					"line": 33,
+					"character": 37
+				}
+			]
+		},
+		{
+			"id": 12,
+			"name": "PackageDefinition",
+			"kind": 256,
+			"kindString": "Interface",
+			"flags": {
+				"isExported": true,
+				"isExternal": true
+			},
+			"children": [
+				{
+					"id": 14,
+					"name": "mainPath",
+					"kind": 1024,
+					"kindString": "Property",
+					"flags": {
+						"isExported": true,
+						"isExternal": true,
+						"isOptional": true
+					},
+					"comment": {
+						"shortText": "The path to the directory that contains the `main` export for the\npackage.",
+						"text": "By default, `mainPath = '/src'`.\n"
+					},
+					"sources": [
+						{
+							"fileName": "resolver-configuration.ts",
+							"line": 18,
+							"character": 10
+						}
+					],
+					"type": {
+						"type": "instrinct",
+						"name": "string"
+					}
+				},
+				{
+					"id": 13,
+					"name": "name",
+					"kind": 1024,
+					"kindString": "Property",
+					"flags": {
+						"isExported": true,
+						"isExternal": true
+					},
+					"comment": {
+						"shortText": "The name of the package, as defined in `package.json`.",
+						"text": "For example, a package published to npm as `ember-super-input` must\nalso use this `name`.\n"
+					},
+					"sources": [
+						{
+							"fileName": "resolver-configuration.ts",
+							"line": 10,
+							"character": 6
+						}
+					],
+					"type": {
+						"type": "instrinct",
+						"name": "string"
+					}
+				},
+				{
+					"id": 15,
+					"name": "rootName",
+					"kind": 1024,
+					"kindString": "Property",
+					"flags": {
+						"isExported": true,
+						"isExternal": true,
+						"isOptional": true
+					},
+					"comment": {
+						"shortText": "An alias used for module resolution.",
+						"text": "For addons, the `rootName` will initially be a read-only property that\nequals the package `name` with any `ember-` and `ember-cli-` prefixes\nstripped. (e.g. `ember-super-input` becomes `super-input`). It's\npossible that custom overrides / aliases will be allowed in the future.\n\nAll apps should use a `rootName` of \"app\" for consistency.\n"
+					},
+					"sources": [
+						{
+							"fileName": "resolver-configuration.ts",
+							"line": 30,
+							"character": 10
+						}
+					],
+					"type": {
+						"type": "instrinct",
+						"name": "string"
+					}
+				}
+			],
+			"groups": [
+				{
+					"title": "Properties",
+					"kind": 1024,
+					"children": [
+						14,
+						13,
+						15
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "resolver-configuration.ts",
+					"line": 3,
+					"character": 34
+				}
+			]
+		},
+		{
+			"id": 24,
+			"name": "ResolverConfiguration",
+			"kind": 256,
+			"kindString": "Interface",
+			"flags": {
+				"isExported": true,
+				"isExternal": true
+			},
+			"children": [
+				{
+					"id": 26,
+					"name": "addons",
+					"kind": 1024,
+					"kindString": "Property",
+					"flags": {
+						"isExported": true,
+						"isExternal": true,
+						"isOptional": true
+					},
+					"sources": [
+						{
+							"fileName": "resolver-configuration.ts",
+							"line": 47,
+							"character": 8
+						}
+					],
+					"type": {
+						"type": "reference",
+						"name": "Dict"
+					}
+				},
+				{
+					"id": 25,
+					"name": "app",
+					"kind": 1024,
+					"kindString": "Property",
+					"flags": {
+						"isExported": true,
+						"isExternal": true,
+						"isOptional": true
+					},
+					"sources": [
+						{
+							"fileName": "resolver-configuration.ts",
+							"line": 46,
+							"character": 5
+						}
+					],
+					"type": {
+						"type": "reference",
+						"name": "PackageDefinition",
+						"id": 12
+					}
+				},
+				{
+					"id": 28,
+					"name": "collections",
+					"kind": 1024,
+					"kindString": "Property",
+					"flags": {
+						"isExported": true,
+						"isExternal": true
+					},
+					"sources": [
+						{
+							"fileName": "resolver-configuration.ts",
+							"line": 49,
+							"character": 13
+						}
+					],
+					"type": {
+						"type": "reference",
+						"name": "Dict"
+					}
+				},
+				{
+					"id": 27,
+					"name": "types",
+					"kind": 1024,
+					"kindString": "Property",
+					"flags": {
+						"isExported": true,
+						"isExternal": true
+					},
+					"sources": [
+						{
+							"fileName": "resolver-configuration.ts",
+							"line": 48,
+							"character": 7
+						}
+					],
+					"type": {
+						"type": "reference",
+						"name": "Dict"
+					}
+				}
+			],
+			"groups": [
+				{
+					"title": "Properties",
+					"kind": 1024,
+					"children": [
+						26,
+						25,
+						28,
+						27
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "resolver-configuration.ts",
+					"line": 45,
+					"character": 38
+				}
+			]
+		},
+		{
+			"id": 1,
+			"name": "assert",
+			"kind": 64,
+			"kindString": "Function",
+			"flags": {
+				"isExported": true,
+				"isExternal": true
+			},
+			"signatures": [
+				{
+					"id": 2,
+					"name": "assert",
+					"kind": 4096,
+					"kindString": "Call signature",
+					"flags": {},
+					"parameters": [
+						{
+							"id": 3,
+							"name": "description",
+							"kind": 32768,
+							"kindString": "Parameter",
+							"flags": {},
+							"type": {
+								"type": "instrinct",
+								"name": "string"
+							}
+						},
+						{
+							"id": 4,
+							"name": "test",
+							"kind": 32768,
+							"kindString": "Parameter",
+							"flags": {},
+							"type": {
+								"type": "instrinct",
+								"name": "any"
+							}
+						}
+					],
+					"type": {
+						"type": "instrinct",
+						"name": "void"
+					}
+				}
+			],
+			"sources": [
+				{
+					"fileName": "utils/debug.ts",
+					"line": 1,
+					"character": 22
+				}
+			]
+		}
+	],
+	"groups": [
+		{
+			"title": "Classes",
+			"kind": 128,
+			"children": [
+				53,
+				29
+			]
+		},
+		{
+			"title": "Interfaces",
+			"kind": 256,
+			"children": [
+				18,
+				5,
+				16,
+				12,
+				24
+			]
+		},
+		{
+			"title": "Functions",
+			"kind": 64,
+			"children": [
+				1
+			]
+		}
+	]
+}

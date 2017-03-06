@@ -15,6 +15,7 @@ function default_1(typeDocJsonObjects) {
         };
         roots.push(project);
         resources.push(project);
+        console.log(tdObj);
     }
     return {
         roots: roots.map(json_api_utils_1.resourceToIdentifier),
