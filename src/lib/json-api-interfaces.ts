@@ -11,13 +11,17 @@ interface RelationshipsObject {
   [index: string]: RelationshipEntry;
 }
 
+interface AttributesObject {
+  [index: string]: any;
+}
+
 export interface ResourceIdentifierObject {
   type: ResourceType;
   id: ResourceId;
 }
 
 export interface ResourceObject extends ResourceIdentifierObject {
-  attributes?: Object;
+  attributes?: AttributesObject;
   relationships?: RelationshipsObject;
   links?: Object;
   meta?: Object;

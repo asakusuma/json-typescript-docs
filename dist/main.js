@@ -22,6 +22,8 @@ function oldMain(inputPath, outputPath) {
     jsonfile_1.writeFileSync(outputPath, transformed, { spaces: 2 });
 }
 function main(inputPath, outputPath) {
+    var manifestContents = fs_1.readFileSync('./data-sets/manifest.json', 'utf8');
+    var manifest = JSON.parse(manifestContents);
     var app = new typedoc_1.Application({
         mode: 'File',
         logger: 'console',
@@ -30,6 +32,7 @@ function main(inputPath, outputPath) {
     });
     var files = walkSync(inputPath, { directories: false }).map(function (path) { return inputPath + path; });
     var project = app.convert(files);
-    console.log(project);
-    app.generateJson(project, outputPath);
+    var projects = [project];
+    var transformed = json_api_transform_1.default(manifest, projects);
+    jsonfile_1.writeFileSync(outputPath, transformed, { spaces: 2 });
 }

@@ -29,6 +29,9 @@ function oldMain(inputPath, outputPath) {
 }
 
 function main(inputPath, outputPath) {
+    const manifestContents = readFileSync('./data-sets/manifest.json', 'utf8');
+    const manifest = JSON.parse(manifestContents);
+
     const app = new Application({
         mode:   'File',
         logger: 'console',
@@ -37,6 +40,7 @@ function main(inputPath, outputPath) {
     });
     let files = walkSync(inputPath, { directories: false }).map((path) => inputPath + path);
     let project = app.convert(files);
-    console.log(project);
-    app.generateJson(project, outputPath);
+    let projects = [project];
+    const transformed = transform(manifest, projects);
+    writeFileSync(outputPath, transformed, { spaces: 2 });
 }
