@@ -38,3 +38,6 @@ jspm_packages
 
 $ Output JSON files
 output
+
+# Built node files
+dist
