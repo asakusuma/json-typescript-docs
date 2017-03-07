@@ -77,31 +77,33 @@ function addChildToResource(child: ResourceObject, relationship: string, resourc
   }
 }
 
-function extract(reflection: Reflection, includeRoot: boolean = true): ResourceObject[] {
-  let resources: ResourceObject[] = [];
-  const root = reflectionToJsonApi(reflection);
-  const meta = kindMetaMap[reflection.kind];
-  const shouldNormalize = meta && meta.normalize;
+interface ResourceExtraction {
+  root: ResourceObject,
+  normalized: ResourceObject[]
+}
 
-  if (includeRoot) {
-    resources.push(root);
-  }
+function extract(reflection: Reflection): ResourceExtraction {
+  let extractedNormalized: ResourceObject[] = [];
+  let extractedRoot = reflectionToJsonApi(reflection);
   
   reflection.traverse((child) => {
     const meta = kindMetaMap[child.kind];
-    const extracted = extract(child);
+    const { normalized, root } = extract(child);
+
+    extractedNormalized = extractedNormalized.concat(normalized);
     
-    if (meta && meta.normalize && shouldNormalize) {
-      for (let i = 0; i < extracted.length; i++) {
-        addRelationshipToResource(extracted[i], GroupPlugin.getKindPlural(child.kind), root);
-      }
-      resources = resources.concat(extracted);
+    if (meta && meta.normalize) {
+      addRelationshipToResource(root, GroupPlugin.getKindPlural(child.kind), extractedRoot);
+      extractedNormalized.push(root);
     } else {
-      addChildToResource(extracted[0], GroupPlugin.getKindPlural(child.kind), root);
+      addChildToResource(root, GroupPlugin.getKindPlural(child.kind), extractedRoot);
     }
   });
 
-  return resources;
+  return {
+    root: extractedRoot,
+    normalized: extractedNormalized
+  };
 }
 
 export default function(projects: ProjectReflection[]) {
@@ -121,9 +123,9 @@ export default function(projects: ProjectReflection[]) {
     roots.push(project);
     resources.push(project);
 
-    const flattened = extract(tdObj, false);
+    const { normalized } = extract(tdObj);
 
-    resources = resources.concat(flattened);
+    resources = resources.concat(normalized);
   }
 
   return {
