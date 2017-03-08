@@ -6,7 +6,8 @@ import {
 
 import {
   ResourceObject,
-  ResourceIdentifierObject
+  ResourceIdentifierObject,
+  AttributesObject
 } from './json-api-interfaces';
 
 import {
@@ -16,8 +17,10 @@ import {
 
 import { ProjectReflection } from 'typedoc/dist/lib/models/reflections/project';
 import { Reflection, ReflectionKind } from 'typedoc/dist/lib/models/reflections/abstract';
+import * as Types from 'typedoc/dist/lib/models/types';
 import { GroupPlugin } from 'typedoc/dist/lib/converter/plugins/GroupPlugin';
 
+let KEYS = {};
 
 const kindMetaMap = {
   [ReflectionKind.Interface]: {
@@ -40,14 +43,50 @@ const kindMetaMap = {
   }
 };
 
-function reflectionToJsonApi(reflection: Reflection): ResourceObject {
-  return {
-    type: slugify(reflection.kindString || 'unknown'),
-    id: String(reflection.id),
-    attributes: {
-      name: reflection.name
+type AnyReflection = Reflection;
+
+function reflectionId(reflection: Reflection) {
+  return String(reflection.id);
+}
+
+function reflectionType(reflection: Reflection) {
+  return slugify(reflection.kindString || 'unknown');
+}
+
+function typeToJsonApi(type: Types.Type): AttributesObject {
+  if (type instanceof Types.ReferenceType) {
+    if (type.reflection) {
+      return reflectionToJsonApi(type.reflection.toObject());
+    } else {
+      return type.toObject();
     }
+  } else if (type instanceof Types.IntrinsicType) {
+    return type;
+  } else if (type instanceof Types.UnionType) {
+    return {
+      name: 'union',
+      types: type.types.map(typeToJsonApi)
+    };
+  }
+  //TODO: Implement the rest of the types
+  return {};
+}
+
+function reflectionToJsonApi(reflection): ResourceObject {
+  let attributes: AttributesObject = {
+    name: reflection.name
   };
+
+  let resource: ResourceObject = {
+    id: reflectionId(reflection),
+    type: reflectionType(reflection),
+    attributes
+  };
+
+  if (reflection.type) {
+    addSingleRelationshipToResource(typeToJsonApi(reflection.type), 'type', resource);
+  }
+  return resource;
 }
 
 function addRelationshipToResource(child: ResourceObject, relationship: string, resource: ResourceObject) {
@@ -69,6 +108,10 @@ function addRelationshipToResource(child: ResourceObject, relationship: string, 
   }
 }
 
+function addSingleRelationshipToResource(child: AttributesObject | ResourceObject, relationship: string, resource: ResourceObject) {
+  resource.attributes[relationship] = child;
+}
+
 function addChildToResource(child: ResourceObject, relationship: string, resource: ResourceObject) {
   if (resource.attributes[relationship]) {
     resource.attributes[relationship].push(child);
@@ -85,6 +128,13 @@ interface ResourceExtraction {
 function extract(reflection: Reflection): ResourceExtraction {
   let extractedNormalized: ResourceObject[] = [];
   let extractedRoot = reflectionToJsonApi(reflection);
+
+  for(var key in reflection) {
+    const value = reflection[key];
+    if (typeof value !== 'function') {
+      KEYS[key] = value;
+    }
+  }
   
   reflection.traverse((child) => {
     const meta = kindMetaMap[child.kind];

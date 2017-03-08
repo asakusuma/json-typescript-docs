@@ -11,7 +11,7 @@ interface RelationshipsObject {
   [index: string]: RelationshipEntry;
 }
 
-interface AttributesObject {
+export interface AttributesObject {
   [index: string]: any;
 }
 
