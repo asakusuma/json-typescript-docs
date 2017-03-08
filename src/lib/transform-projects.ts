@@ -53,13 +53,18 @@ function reflectionType(reflection: Reflection) {
   return slugify(reflection.kindString || 'unknown');
 }
 
-function typeToJsonApi(type: Types.Type): AttributesObject {
+function typeToAttributes(type: Types.Type): AttributesObject {
   if (type instanceof Types.ReferenceType) {
+    let attrs = type.toObject();
     if (type.reflection) {
-      return reflectionToJsonApi(type.reflection.toObject());
-    } else {
-      return type.toObject();
+      attrs.reflection = reflectionToJsonApi(type.reflection.toObject());
+      // References with reflections shouldn't be normalized
+      // so remove id to avoid confustion
+      delete attrs.id;
     }
+    return attrs;
+  } else if (type instanceof Types.ReflectionType) {
+    return reflectionToJsonApi(type.declaration);
   } else if (type instanceof Types.IntrinsicType) {
     return type;
   } else if (type instanceof Types.UnionType) {
@@ -67,9 +72,27 @@ function typeToJsonApi(type: Types.Type): AttributesObject {
       name: 'union',
       types: type.types.map(typeToJsonApi)
     };
+  } else if (type instanceof Types.TypeParameterType) {
+    return {};
+  } else if (type instanceof Types.StringLiteralType) {
+    return type;
+  } else if (type instanceof Types.UnknownType) {
+    return type;
+  } else if (type instanceof Types.TupleType) {
+    return type;
   }
-  //TODO: Implement the rest of the types
-  return {};
+  // TODO: add logging to say unknown type
+  return type;
+}
+
+interface TypeAttributesObject extends AttributesObject {
+  isArray: boolean;
+}
+
+function typeToJsonApi(type: Types.Type): TypeAttributesObject {
+  let attrs = typeToAttributes(type);
+  attrs.isArray = type.isArray;
+  return <TypeAttributesObject>attrs;
 }
 
 function reflectionToJsonApi(reflection): ResourceObject {
@@ -86,6 +109,7 @@ function reflectionToJsonApi(reflection): ResourceObject {
   if (reflection.type) {
     addSingleRelationshipToResource(typeToJsonApi(reflection.type), 'type', resource);
   }
+
   return resource;
 }
 
