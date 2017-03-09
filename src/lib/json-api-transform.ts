@@ -9,13 +9,14 @@ import {
 } from './json-api-utils';
 
 import transformProjects from './transform-projects';
+import { ProjectReflection } from 'typedoc';
 
-export default function jsonApiTransform(manifest: DocSetManifest, typeDocJsonObjects: TypeDocFilesJson[]): DocSetJsonApi {
+export default function jsonApiTransform(manifest: DocSetManifest, projects: ProjectReflection[]): DocSetJsonApi {
 
   const {
     roots,
     resources
-  } = transformProjects(typeDocJsonObjects);
+  } = transformProjects(projects);
 
   return {
     data: {

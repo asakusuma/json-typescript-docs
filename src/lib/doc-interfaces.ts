@@ -1,6 +1,11 @@
 import {
-  ResourceIdentifierObject, ResourceObject
+  ResourceIdentifierObject,
+  ResourceObject,
+  AttributesObject
 } from './json-api-interfaces';
+
+import { ISourceReference } from 'typedoc/dist/lib/models/sources/file';
+import { Comment } from 'typedoc/dist/lib/models/comments/comment';
 
 export interface DocSetManifest {
   title: string;
@@ -30,4 +35,26 @@ export interface ProjectDoc extends ResourceObject {
 export interface ProjectObject {
   roots: ResourceIdentifierObject[],
   resources: ResourceObject[]
+}
+
+export interface TSResource extends ResourceObject {
+  attributes?: AttributesObject;
+}
+
+export interface TSType {
+  type: string;
+  name: string;
+  reflection?: ResourceIdentifierObject;
+  isArray: boolean;
+}
+
+export interface TSAttributesObject extends AttributesObject {
+  name?: string;
+  comment?: Comment;
+  sources?: ISourceReference[];
+  constructors?: TSResource[];
+  callSignatures?: TSResource[];
+  properties?: TSResource[];
+  parameters?: TSResource[];
+  type?: TSType;
 }
