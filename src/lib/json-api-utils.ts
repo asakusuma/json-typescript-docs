@@ -12,3 +12,7 @@ export function resourceToIdentifier(obj: ResourceObject): ResourceIdentifierObj
 export function slugify(str: string) {
   return str.replace(' ', '-').toLocaleLowerCase();
 }
+
+export function camelify(str: string) {
+  return str.toLowerCase().split(' ').map((word) => word.slice(0,1).toUpperCase() + word.slice(1)).join();
+}

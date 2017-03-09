@@ -1,7 +1,10 @@
 import {
   TypeDocFilesJson,
   ProjectObject,
-  ProjectDoc
+  ProjectDoc,
+  TSAttributesObject,
+  TSResource,
+  TSType
 } from './doc-interfaces';
 
 import {
@@ -12,11 +15,13 @@ import {
 
 import {
   resourceToIdentifier,
-  slugify
+  slugify,
+  camelify
 } from './json-api-utils';
 
 import { ProjectReflection } from 'typedoc/dist/lib/models/reflections/project';
 import { Reflection, ReflectionKind } from 'typedoc/dist/lib/models/reflections/abstract';
+import * as Reflections from 'typedoc/dist/lib/models/reflections/';
 import * as Types from 'typedoc/dist/lib/models/types';
 import { GroupPlugin } from 'typedoc/dist/lib/converter/plugins/GroupPlugin';
 
@@ -53,27 +58,29 @@ function reflectionType(reflection: Reflection) {
   return slugify(reflection.kindString || 'unknown');
 }
 
-function typeToAttributes(type: Types.Type): AttributesObject {
+function typeToAttributes(type: Types.Type, recurse: boolean = true): AttributesObject {
   if (type instanceof Types.ReferenceType) {
     let attrs = type.toObject();
     if (type.reflection) {
-      attrs.reflection = reflectionToJsonApi(type.reflection.toObject());
+      let { resource, identifier, normalized } = extract(type.reflection, recurse);
+      attrs.reflection = normalized ? identifier : resource;
       // References with reflections shouldn't be normalized
       // so remove id to avoid confustion
       delete attrs.id;
     }
     return attrs;
   } else if (type instanceof Types.ReflectionType) {
-    return reflectionToJsonApi(type.declaration);
+    const { resource, identifier, normalized } = extract(type.declaration, recurse);
+    return normalized ? identifier : resource;
   } else if (type instanceof Types.IntrinsicType) {
     return type;
   } else if (type instanceof Types.UnionType) {
     return {
       name: 'union',
-      types: type.types.map(typeToJsonApi)
+      types: type.types.map((type) => typeToJsonApi(type, false))
     };
   } else if (type instanceof Types.TypeParameterType) {
-    return {};
+    return type;
   } else if (type instanceof Types.StringLiteralType) {
     return type;
   } else if (type instanceof Types.UnknownType) {
@@ -85,14 +92,10 @@ function typeToAttributes(type: Types.Type): AttributesObject {
   return type;
 }
 
-interface TypeAttributesObject extends AttributesObject {
-  isArray: boolean;
-}
-
-function typeToJsonApi(type: Types.Type): TypeAttributesObject {
-  let attrs = typeToAttributes(type);
+function typeToJsonApi(type: Types.Type, recurse: boolean = true): TSType {
+  let attrs = typeToAttributes(type, recurse);
   attrs.isArray = type.isArray;
-  return <TypeAttributesObject>attrs;
+  return <TSType>attrs;
 }
 
 function reflectionToJsonApi(reflection): ResourceObject {
@@ -105,10 +108,6 @@ function reflectionToJsonApi(reflection): ResourceObject {
     type: reflectionType(reflection),
     attributes
   };
-
-  if (reflection.type) {
-    addSingleRelationshipToResource(typeToJsonApi(reflection.type), 'type', resource);
-  }
 
   return resource;
 }
@@ -145,13 +144,21 @@ function addChildToResource(child: ResourceObject, relationship: string, resourc
 }
 
 interface ResourceExtraction {
-  root: ResourceObject,
-  normalized: ResourceObject[]
+  resource: TSResource,
+  identifier: ResourceIdentifierObject,
+  normalized: boolean,
+  included: ResourceObject[]
 }
 
-function extract(reflection: Reflection): ResourceExtraction {
+function extract(reflection: Reflection, recurse: boolean = true): ResourceExtraction {
   let extractedNormalized: ResourceObject[] = [];
   let extractedRoot = reflectionToJsonApi(reflection);
+
+  if (extractedRoot.attributes.name === 'PackageDefinition') {
+    console.log(reflection);
+  }
+
+  const rootMeta = kindMetaMap[reflection.kind];
 
   for(var key in reflection) {
     const value = reflection[key];
@@ -159,24 +166,38 @@ function extract(reflection: Reflection): ResourceExtraction {
       KEYS[key] = value;
     }
   }
-  
-  reflection.traverse((child) => {
-    const meta = kindMetaMap[child.kind];
-    const { normalized, root } = extract(child);
 
-    extractedNormalized = extractedNormalized.concat(normalized);
-    
-    if (meta && meta.normalize) {
-      addRelationshipToResource(root, GroupPlugin.getKindPlural(child.kind), extractedRoot);
-      extractedNormalized.push(root);
-    } else {
-      addChildToResource(root, GroupPlugin.getKindPlural(child.kind), extractedRoot);
-    }
-  });
+  if (
+    (reflection instanceof Reflections.TypeParameterReflection || 
+    reflection instanceof Reflections.DeclarationReflection ||
+    reflection instanceof Reflections.ParameterReflection ||
+    reflection instanceof Reflections.SignatureReflection)
+    && reflection.type
+  ) {
+    addSingleRelationshipToResource(typeToJsonApi(reflection.type, false), 'type', extractedRoot);
+  }
+  
+  if (recurse) {
+    reflection.traverse((child) => {
+      const meta = kindMetaMap[child.kind];
+      const { normalized, resource, identifier, included } = extract(child);
+
+      extractedNormalized = extractedNormalized.concat(included);
+      
+      if (meta && meta.normalize) {
+        addRelationshipToResource(resource, camelify(GroupPlugin.getKindPlural(child.kind)), extractedRoot);
+        extractedNormalized.push(resource);
+      } else {
+        addChildToResource(resource, camelify(GroupPlugin.getKindPlural(child.kind)), extractedRoot);
+      }
+    });
+  }
 
   return {
-    root: extractedRoot,
-    normalized: extractedNormalized
+    normalized: rootMeta && rootMeta.normalize,
+    resource: extractedRoot,
+    identifier: resourceToIdentifier(extractedRoot),
+    included: extractedNormalized
   };
 }
 
@@ -197,13 +218,41 @@ export default function(projects: ProjectReflection[]) {
     roots.push(project);
     resources.push(project);
 
-    const { normalized } = extract(tdObj);
+    const { included } = extract(tdObj);
 
-    resources = resources.concat(normalized);
+    resources = resources.concat(included);
   }
-
+  console.log(Object.keys(KEYS));
   return {
     roots: roots.map(resourceToIdentifier),
     resources
   };
 }
+
+/*
+[ 'name',
+  'flags',
+  'id',
+  'parent',
+  'originalName',
+  'kind',
+  'reflections',
+  'symbolMapping',
+  'directory',
+  'files',
+  'children',
+  'readme',
+  'packageInfo',
+  'groups',
+  'sources',
+  'implementedTypes',
+  'kindString',
+  'typeHierarchy',
+  'signatures',
+  'parameters',
+  'type',
+  'defaultValue',
+  'implementationOf',
+  'implementedBy',
+  'comment' ]
+  */
