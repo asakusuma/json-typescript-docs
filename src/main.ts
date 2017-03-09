@@ -1,36 +1,24 @@
+#!/usr/bin/env node
 declare function require(name:string);
 import { readFileSync } from "fs";
 import { writeFileSync } from 'jsonfile';
 const walkSync = require('walk-sync');
 
 import transform from './lib/json-api-transform';
+import { err, log } from './lib/logging';
 
 if (process.argv.length < 3) {
-    throw new Error('You must provide a path to the input typedoc JSON as the 1st argument');
-} else if (process.argv.length < 4) {
-    throw new Error('You must provide an output path as the 2nd argument');
+    throw new Error('You must provide a path to the config');
 }
 
 import { Application } from 'typedoc';
+import { Config } from './lib/cli-interfaces';
 
 main(process.argv[2], process.argv[3]);
 
-function oldMain(inputPath, outputPath) {
-    const manifestContents = readFileSync('./data-sets/manifest.json', 'utf8');
-    const fileContents = readFileSync(inputPath, 'utf8');
-    const doc = JSON.parse(fileContents);
-
-    const manifest = JSON.parse(manifestContents);
-    const docs = [doc];
-
-    const transformed = transform(manifest, docs);
-    
-    writeFileSync(outputPath, transformed, { spaces: 2 });
-}
-
 function main(inputPath, outputPath) {
-    const manifestContents = readFileSync('./data-sets/manifest.json', 'utf8');
-    const manifest = JSON.parse(manifestContents);
+    const configFile = readFileSync(inputPath, 'utf8');
+    const config = <Config>JSON.parse(configFile);
 
     const app = new Application({
         mode:   'File',
@@ -38,9 +26,14 @@ function main(inputPath, outputPath) {
         target: 'ES5',
         module: 'CommonJS',
     });
-    let files = walkSync(inputPath, { directories: false }).map((path) => inputPath + path);
-    let project = app.convert(files);
-    let projects = [project];
-    const transformed = transform(manifest, projects);
-    writeFileSync(outputPath, transformed, { spaces: 2 });
+
+    const projects = config.projects.map((project) => {
+        let files = walkSync(project.src, { directories: false }).map((path) => project.src + path);
+        return app.convert(files);
+    });
+
+    const transformed = transform(config.manifest, projects);
+    const out = config.output || outputPath;
+    writeFileSync(out, transformed, { spaces: 2 });
+    console.log('Output file saved to: ' + out);
 }

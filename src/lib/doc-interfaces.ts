@@ -38,7 +38,7 @@ export interface ProjectObject {
 }
 
 export interface TSResource extends ResourceObject {
-  attributes: AttributesObject;
+  attributes?: AttributesObject;
 }
 
 export interface TSType {

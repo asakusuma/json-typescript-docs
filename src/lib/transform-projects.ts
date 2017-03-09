@@ -19,13 +19,13 @@ import {
   camelify
 } from './json-api-utils';
 
+import { ISourceReference } from 'typedoc/dist/lib/models/sources/file';
+
 import { ProjectReflection } from 'typedoc/dist/lib/models/reflections/project';
 import { Reflection, ReflectionKind } from 'typedoc/dist/lib/models/reflections/abstract';
 import * as Reflections from 'typedoc/dist/lib/models/reflections/';
 import * as Types from 'typedoc/dist/lib/models/types';
 import { GroupPlugin } from 'typedoc/dist/lib/converter/plugins/GroupPlugin';
-
-let KEYS = {};
 
 const kindMetaMap = {
   [ReflectionKind.Interface]: {
@@ -98,10 +98,28 @@ function typeToJsonApi(type: Types.Type, recurse: boolean = true): TSType {
   return <TSType>attrs;
 }
 
-function reflectionToJsonApi(reflection): ResourceObject {
+function reflectionToJsonApi(reflection: Reflection): TSResource {
   let attributes: AttributesObject = {
-    name: reflection.name
+    name: reflection.name,
   };
+
+  if (reflection.sources) {
+    attributes.sources = reflection.sources.map((source => {
+      let { fileName, line, character, url } = source;
+      const s: ISourceReference = {
+        fileName,
+        line,
+        character,
+        url
+      };
+
+      return s;
+    }))
+  }
+
+  if (reflection.hasComment()) {
+    attributes.comment = reflection.comment;
+  }
 
   let resource: ResourceObject = {
     id: reflectionId(reflection),
@@ -147,25 +165,14 @@ interface ResourceExtraction {
   resource: TSResource,
   identifier: ResourceIdentifierObject,
   normalized: boolean,
-  included: ResourceObject[]
+  included: TSResource[]
 }
 
 function extract(reflection: Reflection, recurse: boolean = true): ResourceExtraction {
   let extractedNormalized: ResourceObject[] = [];
   let extractedRoot = reflectionToJsonApi(reflection);
 
-  if (extractedRoot.attributes.name === 'PackageDefinition') {
-    console.log(reflection);
-  }
-
   const rootMeta = kindMetaMap[reflection.kind];
-
-  for(var key in reflection) {
-    const value = reflection[key];
-    if (typeof value !== 'function') {
-      KEYS[key] = value;
-    }
-  }
 
   if (
     (reflection instanceof Reflections.TypeParameterReflection || 
@@ -175,6 +182,11 @@ function extract(reflection: Reflection, recurse: boolean = true): ResourceExtra
     && reflection.type
   ) {
     addSingleRelationshipToResource(typeToJsonApi(reflection.type, false), 'type', extractedRoot);
+  }
+
+  if (reflection instanceof Reflections.DeclarationReflection && reflection.extendedTypes) {
+    // We don't want to include information about base types like Element or Window
+    recurse = recurse && !reflection.extendedTypes.some((type: any) => !type.reflection); 
   }
   
   if (recurse) {
@@ -202,27 +214,26 @@ function extract(reflection: Reflection, recurse: boolean = true): ResourceExtra
 }
 
 export default function(projects: ProjectReflection[]) {
-  let roots: ProjectDoc[] = [];
-  let resources: ResourceObject[] = [];
+  let roots: TSResource[] = [];
+  let resources: TSResource[] = [];
 
   for (let i = 0; i < projects.length; i++) {
     const tdObj = projects[i];
-    const project: ProjectDoc = {
-      id: slugify(tdObj.name),
-      type: 'projectdoc',
-      attributes: {
-        name: tdObj.name
-      }
-    };
 
-    roots.push(project);
-    resources.push(project);
+    if (tdObj) {
+      const { included, resource } = extract(tdObj);
 
-    const { included } = extract(tdObj);
+      resource.id = slugify(tdObj.name);
+      resource.type = 'projectdoc';
 
-    resources = resources.concat(included);
+      roots.push(resource);
+      resources.push(resource);
+
+      resources = resources.concat(included);
+    } else {
+      console.log('Project could not be read');
+    }
   }
-  console.log(Object.keys(KEYS));
   return {
     roots: roots.map(resourceToIdentifier),
     resources

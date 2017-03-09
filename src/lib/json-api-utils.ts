@@ -14,5 +14,6 @@ export function slugify(str: string) {
 }
 
 export function camelify(str: string) {
-  return str.toLowerCase().split(' ').map((word) => word.slice(0,1).toUpperCase() + word.slice(1)).join();
+  let string = str.toLowerCase().split(' ').map((word) => word.slice(0,1).toUpperCase() + word.slice(1)).join('');
+  return string.slice(0,1).toLowerCase() + string.slice(1);
 }
