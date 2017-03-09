@@ -23,7 +23,7 @@ function main(inputPath, outputPath) {
     const app = new Application({
         mode:   'File',
         logger: 'console',
-        target: 'ES5',
+        target: 'ES6',
         module: 'CommonJS',
     });
 
