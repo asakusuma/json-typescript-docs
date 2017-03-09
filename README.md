@@ -5,22 +5,27 @@ Tool for transforming typedoc json to other formats
 
 Usage for converting to modified JSDoc/JSON API lovechild
 
-### 1. Generate a typedoc JSON file
+### 1. Generate a config file
 
-```
-cd my-project
-typedoc --json output.json src/
+See [config schema](https://github.com/asakusuma/typedoc-transformer/blob/e543724decceafe709317e4b0335fbb130ec2bb1/src/lib/cli-interfaces.ts#L5).
+
+```JSON
+{
+  "manifest" : {
+    "title": "My docs site",
+    "intro": "Everything is awesome"
+  },
+  "projects": [
+    {
+      "src": "path/to/some/project"
+    }
+  ],
+  "output": "out.json"
+}
 ```
 
 ### 2. Run transform
 
 ```
-cd typedoc-transformer
-npm run exec path/to/typedoc.json path/to/output.json
-```
-
-## Examples
-
-```
-npm run exec data-sets/glimmer-resolver-files.json output/out.json 
+tdt my-config.json
 ```
