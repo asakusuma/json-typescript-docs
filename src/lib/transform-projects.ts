@@ -6,14 +6,9 @@ import {
   TSResource,
   TSType,
   TSResourceFlags,
-  TSTypeLink
+  TSTypeLink,
+  TSResourceIdentifierObject
 } from './doc-interfaces';
-
-import {
-  ResourceObject,
-  ResourceIdentifierObject,
-  AttributesObject
-} from './json-api-interfaces';
 
 import {
   resourceToIdentifier,
@@ -108,44 +103,33 @@ function flattenSource(source: ISourceReference) {
   return s;
 }
 
-function typeToAttributes(type: Types.Type, recurse: boolean = true): AttributesObject {
-  if (type instanceof Types.ReferenceType) {
-    let attrs = type.toObject();
-    if (type.reflection) {
-      let { resource, identifier, normalized } = extract(type.reflection, recurse);
-      attrs.link = normalized ? toTypeLink(type.reflection) : resource;
-      // References with reflections shouldn't be normalized
-      // so remove id to avoid confustion
-      delete attrs.id;
-    }
-    return attrs;
-  } else if (type instanceof Types.ReflectionType) {
-    const { resource, identifier, normalized } = extract(type.declaration, recurse);
-    return normalized ? toTypeLink(type.declaration) : resource;
-  } else if (type instanceof Types.IntrinsicType) {
-    return type;
-  } else if (type instanceof Types.UnionType) {
-    return {
-      name: 'union',
-      types: type.types.map((type) => typeToJsonApi(type, false))
-    };
-  } else if (type instanceof Types.TypeParameterType) {
-    return type;
-  } else if (type instanceof Types.StringLiteralType) {
-    return type;
-  } else if (type instanceof Types.UnknownType) {
-    return type;
-  } else if (type instanceof Types.TupleType) {
-    return type;
-  }
-  // TODO: add logging to say unknown type
-  return type;
-}
-
 function typeToJsonApi(type: Types.Type, recurse: boolean = true): TSType {
-  let attrs = typeToAttributes(type, recurse);
-  attrs.isArray = type.isArray;
-  return <TSType>attrs;
+  let typeJson: TSType = {
+    isArray: type.isArray,
+    name: type.toString()
+  };
+  if (type instanceof Types.ReferenceType) {
+    typeJson.name = type.name;
+    if (type.reflection) {
+      typeJson.link = toTypeLink(type.reflection);
+    }
+  } else if (type instanceof Types.ReflectionType) {
+    const { resource } = extract(type.declaration)
+    typeJson.declaration = resource;
+  } else if (type instanceof Types.IntrinsicType) {
+    typeJson.name = type.name;
+  } else if (type instanceof Types.UnionType) {
+    typeJson.types = type.types.map((type) => typeToJsonApi(type, false));
+  } else if (type instanceof Types.TypeParameterType) {
+    typeJson.name = type.name;
+  } else if (type instanceof Types.StringLiteralType) {
+    typeJson.name = type.value;
+  } else if (type instanceof Types.UnknownType) {
+    typeJson.name = type.name;
+  } else if (type instanceof Types.TupleType) {
+    typeJson.types = type.elements.map((type) => typeToJsonApi(type, false));
+  }
+  return typeJson;
 }
 
 function reflectionToJsonApi(reflection: Reflection): TSResource {
@@ -201,7 +185,7 @@ function reflectionToJsonApi(reflection: Reflection): TSResource {
     registerId(id, type, slug, reflection.parent);
   }
 
-  const resource: ResourceObject = {
+  const resource: TSResource = {
     id,
     type,
     attributes
@@ -210,8 +194,8 @@ function reflectionToJsonApi(reflection: Reflection): TSResource {
   return resource;
 }
 
-function addRelationshipToResource(child: ResourceObject, relationship: string, resource: ResourceObject) {
-  const resourceId: ResourceIdentifierObject = {
+function addRelationshipToResource(child: TSResource, relationship: string, resource: TSResource) {
+  const resourceId: TSResourceIdentifierObject = {
     type: child.type,
     id: child.id
   };
@@ -220,7 +204,7 @@ function addRelationshipToResource(child: ResourceObject, relationship: string, 
   }
   if (resource.relationships[relationship]) {
     if (Array.isArray(resource.relationships[relationship].data)) {
-      (<ResourceIdentifierObject[]>(resource.relationships[relationship].data)).push(resourceId);
+      (<TSResourceIdentifierObject[]>(resource.relationships[relationship].data)).push(resourceId);
     }
   } else {
     resource.relationships[relationship] = {
@@ -229,11 +213,11 @@ function addRelationshipToResource(child: ResourceObject, relationship: string, 
   }
 }
 
-function addSingleRelationshipToResource(child: AttributesObject | ResourceObject, relationship: string, resource: ResourceObject) {
+function addSingleRelationshipToResource(child: TSAttributesObject | TSResource | TSType, relationship: string, resource: TSResource) {
   resource.attributes[relationship] = child;
 }
 
-function addChildToResource(child: AttributesObject, relationship: string, resource: ResourceObject) {
+function addChildToResource(child: TSAttributesObject, relationship: string, resource: TSResource) {
   if (resource.attributes[relationship]) {
     resource.attributes[relationship].push(child);
   } else {
@@ -243,13 +227,13 @@ function addChildToResource(child: AttributesObject, relationship: string, resou
 
 interface ResourceExtraction {
   resource: TSResource,
-  identifier: ResourceIdentifierObject,
+  identifier: TSResourceIdentifierObject,
   normalized: boolean,
   included: TSResource[]
 }
 
 function extract(reflection: Reflection, recurse: boolean = true): ResourceExtraction {
-  let extractedNormalized: ResourceObject[] = [];
+  let extractedNormalized: TSResource[] = [];
   let extractedRoot = reflectionToJsonApi(reflection);
 
   const rootMeta = kindMetaMap[reflection.kind];

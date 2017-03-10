@@ -38,14 +38,17 @@ export interface ProjectObject {
 }
 
 export interface TSResource extends ResourceObject {
-  attributes?: AttributesObject;
+  attributes: TSAttributesObject;
 }
 
+export type TSResourceIdentifierObject = ResourceIdentifierObject;
+
 export interface TSType {
-  type: string;
   name: string;
-  reflection?: ResourceIdentifierObject;
+  link?: TSTypeLink;
+  declaration?: TSResource;
   isArray: boolean;
+  types?: TSType[]
 }
 
 export interface TSAttributesObject extends AttributesObject {

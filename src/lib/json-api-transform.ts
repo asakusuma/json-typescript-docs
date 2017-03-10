@@ -15,7 +15,6 @@ import {
 import { ProjectReflection } from 'typedoc';
 
 export default function jsonApiTransform(manifest: DocSetManifest, projects: ProjectReflection[]): DocSetJsonApi {
-
   const {
     roots,
     resources
