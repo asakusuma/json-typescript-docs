@@ -52,7 +52,7 @@ export var GLOBAL_ID_MAP = {};
 
 function registerId(id: string, type: string, slug: string, parent: Reflection) {
   if (parent && !parent.parent) {
-    const parentId = slugify(parent.name);
+    const parentId = parent.getAlias();
     (GLOBAL_ID_MAP[parentId] = GLOBAL_ID_MAP[parentId] || {})[slug] = id;
   }
 }
@@ -128,7 +128,7 @@ function reflectionToJsonApi(reflection: Reflection): TSResource {
     flags[key] = reflection.flags[key];
   }
 
-  const slug = slugify(reflection.name);
+  const slug = reflection.getAlias();
   const alias = reflection.getAlias();
   const fullName = reflection.getFullName();
   const hierarchy = reflection.toStringHierarchy();
@@ -269,7 +269,7 @@ export default function(projects: ProjectReflection[]) {
     if (tdObj) {
       const { included, resource } = extract(tdObj);
 
-      resource.id = slugify(tdObj.name);
+      resource.id = tdObj.getAlias();
       resource.type = 'projectdoc';
 
       roots.push(resource);
