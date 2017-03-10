@@ -9,7 +9,7 @@ export function resourceToIdentifier(obj: ResourceObject): ResourceIdentifierObj
   };
 }
 
-export function urlSafe(str) {
+export function urlSafe(str: string) {
   return str.replace('@','').replace('/','-');
 }
 

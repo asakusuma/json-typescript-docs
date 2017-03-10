@@ -1,8 +1,9 @@
 #!/usr/bin/env node
-declare function require(name:string);
-import { readFileSync } from "fs";
-import { writeFileSync } from 'jsonfile';
+declare function require(name:string): any;
+const { writeFileSync } = require('jsonfile');
 const walkSync = require('walk-sync');
+
+import { readFileSync } from "fs";
 
 import transform from './lib/json-api-transform';
 import { err, log } from './lib/logging';
@@ -16,7 +17,7 @@ import { Config } from './lib/cli-interfaces';
 
 main(process.argv[2], process.argv[3]);
 
-function main(inputPath, outputPath) {
+function main(inputPath: string, outputPath: string) {
     const configFile = readFileSync(inputPath, 'utf8');
     const config = <Config>JSON.parse(configFile);
 
@@ -28,7 +29,7 @@ function main(inputPath, outputPath) {
     });
 
     const projects = config.projects.map((project) => {
-        let files = walkSync(project.src, { directories: false }).map((path) => project.src + path);
+        let files = walkSync(project.src, { directories: false }).map((path: string) => project.src + path);
         return app.convert(files);
     });
 

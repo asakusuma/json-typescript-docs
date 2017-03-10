@@ -60,3 +60,23 @@ export interface TSAttributesObject extends AttributesObject {
   slug: string;
   alias: string;
 }
+
+export interface TSResourceFlags {
+  isPrivate: boolean;
+  isProtected: boolean;
+  isPublic: boolean;
+  isStatic: boolean;
+  isExported: boolean;
+  isExternal: boolean;
+  isOptional: boolean;
+  isRest: boolean;
+  isNormalized: boolean;
+}
+
+export interface TSTypeLink {
+  id: string,
+  type: string;
+  slug: string;
+  sources: ISourceReference[],
+  parent?: TSTypeLink
+};

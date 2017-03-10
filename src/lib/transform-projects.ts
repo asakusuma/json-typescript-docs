@@ -4,7 +4,9 @@ import {
   ProjectDoc,
   TSAttributesObject,
   TSResource,
-  TSType
+  TSType,
+  TSResourceFlags,
+  TSTypeLink
 } from './doc-interfaces';
 
 import {
@@ -48,7 +50,15 @@ const kindMetaMap = {
   }
 };
 
-export var GLOBAL_ID_MAP = {};
+interface ModuleIdMap {
+  [index: string]: string;
+}
+
+interface ProjectIdMap {
+  [index: string]: ModuleIdMap;
+}
+
+export var GLOBAL_ID_MAP: ProjectIdMap = {};
 
 function registerId(id: string, type: string, slug: string, parent: Reflection) {
   if (parent && !parent.parent) {
@@ -67,19 +77,19 @@ function reflectionType(reflection: Reflection) {
 
 function toTypeLink(reflection: Reflection) {
   const parent = reflection.parent;
-  let link = {
-    id: reflection.id,
+  let link: TSTypeLink = {
+    id: String(reflection.id),
     type: slugify(reflection.kindString),
     slug: reflection.getAlias(),
-    sources: reflection.sources.map(flattenSource),
-    parent: null
+    sources: reflection.sources.map(flattenSource)
   };
 
   if (parent) {
     link.parent = {
-      id: parent.id,
-      type: parent.kindString ? slugify(parent.kindString) : parent.kind,
+      id: String(parent.id),
+      type: parent.kindString ? slugify(parent.kindString) : String(parent.kind),
       slug: parent.getAlias(),
+      sources: parent.sources ? parent.sources.map(flattenSource) : null
     }
   }
 
@@ -103,7 +113,7 @@ function typeToAttributes(type: Types.Type, recurse: boolean = true): Attributes
     let attrs = type.toObject();
     if (type.reflection) {
       let { resource, identifier, normalized } = extract(type.reflection, recurse);
-      attrs.reflection = normalized ? toTypeLink(type.reflection) : resource;
+      attrs.link = normalized ? toTypeLink(type.reflection) : resource;
       // References with reflections shouldn't be normalized
       // so remove id to avoid confustion
       delete attrs.id;
@@ -138,28 +148,21 @@ function typeToJsonApi(type: Types.Type, recurse: boolean = true): TSType {
   return <TSType>attrs;
 }
 
-interface Flags {
-  isPrivate?: boolean;
-  isProtected?: boolean;
-  isPublic?: boolean;
-  isStatic?: boolean;
-  isExported?: boolean;
-  isExternal?: boolean;
-  isOptional?: boolean;
-  isRest?: boolean;
-  isNormalized: boolean;
-}
-
 function reflectionToJsonApi(reflection: Reflection): TSResource {
   const rootMeta = kindMetaMap[reflection.kind];
   const isNormalized = rootMeta && rootMeta.normalize;
 
-  let flags: Flags = {
-    isNormalized
+  let flags: TSResourceFlags = {
+    isNormalized,
+    isExported: reflection.flags.isExported,
+    isExternal: reflection.flags.isExternal,
+    isOptional: reflection.flags.isOptional,
+    isPrivate: reflection.flags.isPrivate,
+    isPublic: reflection.flags.isPublic,
+    isProtected: reflection.flags.isProtected,
+    isRest: reflection.flags.isRest,
+    isStatic: reflection.flags.isStatic,
   };
-  for (var key in reflection.flags) {
-    flags[key] = reflection.flags[key];
-  }
 
   const slug = reflection.getAlias();
   const alias = reflection.getAlias();
