@@ -8,7 +8,10 @@ import {
   slugify
 } from './json-api-utils';
 
-import transformProjects from './transform-projects';
+import {
+  default as transformProjects,
+  GLOBAL_ID_MAP
+} from './transform-projects';
 import { ProjectReflection } from 'typedoc';
 
 export default function jsonApiTransform(manifest: DocSetManifest, projects: ProjectReflection[]): DocSetJsonApi {
@@ -22,7 +25,11 @@ export default function jsonApiTransform(manifest: DocSetManifest, projects: Pro
     data: {
       id: slugify(manifest.title),
       type: 'docset',
-      attributes: manifest,
+      attributes: {
+        title: manifest.title,
+        intro: manifest.intro,
+        idMap: GLOBAL_ID_MAP
+      },
       relationships: {
         docmodules: {
           data: roots

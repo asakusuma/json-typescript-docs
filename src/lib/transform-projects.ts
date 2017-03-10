@@ -48,17 +48,17 @@ const kindMetaMap = {
   }
 };
 
-let GLOBAL_ID_MAP = {};
+export var GLOBAL_ID_MAP = {};
+
+function registerId(id: string, type: string, slug: string, parent: Reflection) {
+  if (parent && !parent.parent) {
+    const parentId = slugify(parent.name);
+    (GLOBAL_ID_MAP[parentId] = GLOBAL_ID_MAP[parentId] || {})[slug] = id;
+  }
+}
 
 function reflectionId(reflection: Reflection) {
-  const type = reflectionType(reflection);
-  const simpleId = slugify(reflection.name);
-
-  const conflict: boolean = !!GLOBAL_ID_MAP[simpleId] && GLOBAL_ID_MAP[simpleId] !== reflection.id;
-
-  const id = conflict ? simpleId + String(reflection.id) : simpleId;
-  GLOBAL_ID_MAP[id] = reflection.id;
-  return id;
+  return String(reflection.id);
 }
 
 function reflectionType(reflection: Reflection) {
@@ -105,10 +105,41 @@ function typeToJsonApi(type: Types.Type, recurse: boolean = true): TSType {
   return <TSType>attrs;
 }
 
+interface Flags {
+  isPrivate?: boolean;
+  isProtected?: boolean;
+  isPublic?: boolean;
+  isStatic?: boolean;
+  isExported?: boolean;
+  isExternal?: boolean;
+  isOptional?: boolean;
+  isRest?: boolean;
+  isNormalized: boolean;
+}
+
 function reflectionToJsonApi(reflection: Reflection): TSResource {
+  const rootMeta = kindMetaMap[reflection.kind];
+  const isNormalized = rootMeta && rootMeta.normalize;
+
+  let flags: Flags = {
+    isNormalized
+  };
+  for (var key in reflection.flags) {
+    flags[key] = reflection.flags[key];
+  }
+
+  const slug = slugify(reflection.name);
+  const alias = reflection.getAlias();
+  const fullName = reflection.getFullName();
+  const hierarchy = reflection.toStringHierarchy();
+
   let attributes: AttributesObject = {
     name: reflection.name,
-    slug: slugify(reflection.name)
+    slug,
+    flags,
+    alias,
+    fullName,
+    hierarchy
   };
 
   if (reflection.sources) {
@@ -130,6 +161,11 @@ function reflectionToJsonApi(reflection: Reflection): TSResource {
   }
   const type = reflectionType(reflection);
   const id = reflectionId(reflection);
+
+  if (isNormalized) {
+    registerId(id, type, slug, reflection.parent);
+  }
+
   const resource: ResourceObject = {
     id,
     type,
@@ -162,7 +198,7 @@ function addSingleRelationshipToResource(child: AttributesObject | ResourceObjec
   resource.attributes[relationship] = child;
 }
 
-function addChildToResource(child: ResourceObject, relationship: string, resource: ResourceObject) {
+function addChildToResource(child: AttributesObject, relationship: string, resource: ResourceObject) {
   if (resource.attributes[relationship]) {
     resource.attributes[relationship].push(child);
   } else {
@@ -182,6 +218,7 @@ function extract(reflection: Reflection, recurse: boolean = true): ResourceExtra
   let extractedRoot = reflectionToJsonApi(reflection);
 
   const rootMeta = kindMetaMap[reflection.kind];
+  const normalized = rootMeta && rootMeta.normalize;
 
   if (
     (reflection instanceof Reflections.TypeParameterReflection || 
@@ -209,13 +246,13 @@ function extract(reflection: Reflection, recurse: boolean = true): ResourceExtra
         addRelationshipToResource(resource, camelify(GroupPlugin.getKindPlural(child.kind)), extractedRoot);
         extractedNormalized.push(resource);
       } else {
-        addChildToResource(resource, camelify(GroupPlugin.getKindPlural(child.kind)), extractedRoot);
+        addChildToResource(resource.attributes, camelify(GroupPlugin.getKindPlural(child.kind)), extractedRoot);
       }
     });
   }
 
   return {
-    normalized: rootMeta && rootMeta.normalize,
+    normalized,
     resource: extractedRoot,
     identifier: resourceToIdentifier(extractedRoot),
     included: extractedNormalized
