@@ -48,10 +48,17 @@ const kindMetaMap = {
   }
 };
 
-type AnyReflection = Reflection;
+let GLOBAL_ID_MAP = {};
 
 function reflectionId(reflection: Reflection) {
-  return String(reflection.id);
+  const type = reflectionType(reflection);
+  const simpleId = slugify(reflection.name);
+
+  const conflict: boolean = !!GLOBAL_ID_MAP[simpleId] && GLOBAL_ID_MAP[simpleId] !== reflection.id;
+
+  const id = conflict ? simpleId + String(reflection.id) : simpleId;
+  GLOBAL_ID_MAP[id] = reflection.id;
+  return id;
 }
 
 function reflectionType(reflection: Reflection) {
@@ -101,6 +108,7 @@ function typeToJsonApi(type: Types.Type, recurse: boolean = true): TSType {
 function reflectionToJsonApi(reflection: Reflection): TSResource {
   let attributes: AttributesObject = {
     name: reflection.name,
+    slug: slugify(reflection.name)
   };
 
   if (reflection.sources) {
@@ -120,10 +128,11 @@ function reflectionToJsonApi(reflection: Reflection): TSResource {
   if (reflection.hasComment()) {
     attributes.comment = reflection.comment;
   }
-
-  let resource: ResourceObject = {
-    id: reflectionId(reflection),
-    type: reflectionType(reflection),
+  const type = reflectionType(reflection);
+  const id = reflectionId(reflection);
+  const resource: ResourceObject = {
+    id,
+    type,
     attributes
   };
 

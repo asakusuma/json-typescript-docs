@@ -9,8 +9,12 @@ export function resourceToIdentifier(obj: ResourceObject): ResourceIdentifierObj
   };
 }
 
+export function urlSafe(str) {
+  return str.replace('@','').replace('/','-');
+}
+
 export function slugify(str: string) {
-  return str.replace(' ', '-').toLocaleLowerCase();
+  return urlSafe(str.replace(' ', '-').toLocaleLowerCase());
 }
 
 export function camelify(str: string) {
