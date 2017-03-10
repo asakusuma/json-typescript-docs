@@ -65,12 +65,45 @@ function reflectionType(reflection: Reflection) {
   return slugify(reflection.kindString || 'unknown');
 }
 
+function toTypeLink(reflection: Reflection) {
+  const parent = reflection.parent;
+  let link = {
+    id: reflection.id,
+    type: slugify(reflection.kindString),
+    slug: reflection.getAlias(),
+    sources: reflection.sources.map(flattenSource),
+    parent: null
+  };
+
+  if (parent) {
+    link.parent = {
+      id: parent.id,
+      type: parent.kindString ? slugify(parent.kindString) : parent.kind,
+      slug: parent.getAlias(),
+    }
+  }
+
+  return link;
+}
+
+function flattenSource(source: ISourceReference) {
+  let { fileName, line, character, url } = source;
+  const s: ISourceReference = {
+    fileName,
+    line,
+    character,
+    url
+  };
+
+  return s;
+}
+
 function typeToAttributes(type: Types.Type, recurse: boolean = true): AttributesObject {
   if (type instanceof Types.ReferenceType) {
     let attrs = type.toObject();
     if (type.reflection) {
       let { resource, identifier, normalized } = extract(type.reflection, recurse);
-      attrs.reflection = normalized ? identifier : resource;
+      attrs.reflection = normalized ? toTypeLink(type.reflection) : resource;
       // References with reflections shouldn't be normalized
       // so remove id to avoid confustion
       delete attrs.id;
@@ -78,7 +111,7 @@ function typeToAttributes(type: Types.Type, recurse: boolean = true): Attributes
     return attrs;
   } else if (type instanceof Types.ReflectionType) {
     const { resource, identifier, normalized } = extract(type.declaration, recurse);
-    return normalized ? identifier : resource;
+    return normalized ? toTypeLink(type.declaration) : resource;
   } else if (type instanceof Types.IntrinsicType) {
     return type;
   } else if (type instanceof Types.UnionType) {
@@ -133,7 +166,7 @@ function reflectionToJsonApi(reflection: Reflection): TSResource {
   const fullName = reflection.getFullName();
   const hierarchy = reflection.toStringHierarchy();
 
-  let attributes: AttributesObject = {
+  let attributes: TSAttributesObject = {
     name: reflection.name,
     slug,
     flags,
@@ -142,18 +175,17 @@ function reflectionToJsonApi(reflection: Reflection): TSResource {
     hierarchy
   };
 
-  if (reflection.sources) {
-    attributes.sources = reflection.sources.map((source => {
-      let { fileName, line, character, url } = source;
-      const s: ISourceReference = {
-        fileName,
-        line,
-        character,
-        url
-      };
+  if (reflection instanceof Reflections.DeclarationReflection) {
+    if (reflection.implementedTypes) {
+      attributes.implementedTypes = reflection.implementedTypes.map((r) => typeToJsonApi(r))
+    }
+    if (reflection.extendedTypes) {
+      attributes.extendedTypes = reflection.extendedTypes.map((r) => typeToJsonApi(r))
+    }
+  }
 
-      return s;
-    }))
+  if (reflection.sources) {
+    attributes.sources = reflection.sources.map(flattenSource)
   }
 
   if (reflection.hasComment()) {

@@ -57,4 +57,6 @@ export interface TSAttributesObject extends AttributesObject {
   properties?: TSResource[];
   parameters?: TSResource[];
   type?: TSType;
+  slug: string;
+  alias: string;
 }
