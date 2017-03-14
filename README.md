@@ -1,6 +1,10 @@
 # typedoc-transformer
 Tool for transforming typedoc json to other formats
 
+```
+npm install -g typedoc-transformer
+```
+
 ## Usage
 
 Usage for converting to modified JSDoc/JSON API lovechild
