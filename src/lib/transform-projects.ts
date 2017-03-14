@@ -6,6 +6,7 @@ import {
   TSResource,
   TSType,
   TSRelationship,
+  TSChild,
   TSResourceFlags,
   TSTypeLink,
   TSResourceIdentifierObject
@@ -202,21 +203,25 @@ function reflectionToJsonApi(reflection: Reflection): TSResource {
 }
 
 function addRelationshipToResource(child: TSResource, relationship: string, resource: TSResource) {
-  const resourceId: TSResourceIdentifierObject = {
-    type: child.type,
-    id: child.id
-  };
-  if (!resource.relationships) {
-    resource.relationships = {};
-  }
-  if (resource.relationships[relationship]) {
-    if (Array.isArray(resource.relationships[relationship].data)) {
-      (<TSResourceIdentifierObject[]>(resource.relationships[relationship].data)).push(resourceId);
+  if (relationship === 'interfaces' || relationship === 'classes') {
+    const resourceId: TSResourceIdentifierObject = {
+      type: child.type,
+      id: child.id
+    };
+    if (!resource.relationships) {
+      resource.relationships = {};
+    }
+    if (resource.relationships[relationship]) {
+      if (Array.isArray(resource.relationships[relationship].data)) {
+        (<TSResourceIdentifierObject[]>(resource.relationships[relationship].data)).push(resourceId);
+      }
+    } else {
+      resource.relationships[relationship] = {
+        data: [resourceId]
+      };
     }
   } else {
-    resource.relationships[relationship] = {
-      data: [resourceId]
-    };
+    console.info('Unknown relationship: ' + relationship);
   }
 }
 
@@ -240,11 +245,11 @@ function addChildToResource(child: TSAttributesObject, relationship: string, res
     relationship === 'typeParameters') {
     _addChildToResource(child, relationship, resource);
   } else {
-    console.log(relationship);
+    console.info('Unknown relationship: ' + relationship);
   }
 }
 
-function _addChildToResource(child: TSAttributesObject, relationship: TSRelationship, resource: TSResource) {
+function _addChildToResource(child: TSAttributesObject, relationship: TSChild, resource: TSResource) {
   if (resource.attributes[relationship]) {
     resource.attributes[relationship].push(child);
   } else {
@@ -287,8 +292,6 @@ function extract(reflection: Reflection, recurse: boolean = true): ResourceExtra
       const { normalized, resource, identifier, included } = extract(child);
 
       extractedNormalized = extractedNormalized.concat(included);
-
-      //console.log(camelify(GroupPlugin.getKindPlural(child.kind)));
       
       if (meta && meta.normalize) {
         addRelationshipToResource(resource, camelify(GroupPlugin.getKindPlural(child.kind)), extractedRoot);

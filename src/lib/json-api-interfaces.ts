@@ -7,7 +7,7 @@ export interface RelationshipEntry {
   meta?: Object;
 }
 
-interface RelationshipsObject {
+export interface RelationshipsObject {
   [index: string]: RelationshipEntry;
 }
 

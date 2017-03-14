@@ -1,7 +1,9 @@
 import {
   ResourceIdentifierObject,
   ResourceObject,
-  AttributesObject
+  AttributesObject,
+  RelationshipEntry,
+  RelationshipsObject
 } from './json-api-interfaces';
 
 import { ISourceReference } from 'typedoc/dist/lib/models/sources/file';
@@ -38,8 +40,14 @@ export interface ProjectObject {
   resources: ResourceObject[]
 }
 
+export interface TSRelationshipsObject extends RelationshipsObject {
+  classes?: RelationshipEntry;
+  interfaces?: RelationshipEntry;
+}
+
 export interface TSResource extends ResourceObject {
   attributes: TSAttributesObject;
+  relationships?: TSRelationshipsObject;
 }
 
 export type TSResourceIdentifierObject = ResourceIdentifierObject;
@@ -103,7 +111,9 @@ export interface TSTypeLink {
   parent?: TSTypeLink
 };
 
-export type TSRelationship = 'callSignatures' |
+export type TSRelationship = 'interfaces' | 'classs';
+
+export type TSChild = 'callSignatures' |
   'parameters' |
   'typeLiterals' |
   'callSignatures' |
@@ -118,23 +128,3 @@ export type TSRelationship = 'callSignatures' |
   'functions' |
   'objectLiterals' |
   'typeParameters';
-
-export function isValidRelationshipString(relationship: string) {
-  return relationship === 'parameters' ||
-    relationship === 'callSignatures' ||
-    relationship === 'constructors' ||
-    relationship === 'typeLiterals' ||
-    relationship === 'interfaces' ||
-    relationship === 'properties' ||
-    relationship === 'constructors' ||
-    relationship === 'constructorSignatures' ||
-    relationship === 'typeAliases' ||
-    relationship === 'indexSignatures' ||
-    relationship === 'methods' ||
-    relationship === 'properties' ||
-    relationship === 'variables' ||
-    relationship === 'functions' ||
-    relationship === 'variables' ||
-    relationship === 'objectLiterals' ||
-    relationship === 'typeParameters';
-}
