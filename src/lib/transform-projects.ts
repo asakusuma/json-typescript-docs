@@ -5,6 +5,7 @@ import {
   TSAttributesObject,
   TSResource,
   TSType,
+  TSRelationship,
   TSResourceFlags,
   TSTypeLink,
   TSResourceIdentifierObject
@@ -162,6 +163,12 @@ function reflectionToJsonApi(reflection: Reflection): TSResource {
     hierarchy
   };
 
+  if (reflection instanceof Reflections.ProjectReflection) {
+    const { packageInfo, readme } = reflection;
+    attributes.packageInfo = packageInfo;
+    attributes.readme = readme;
+  }
+
   if (reflection instanceof Reflections.DeclarationReflection) {
     if (reflection.implementedTypes) {
       attributes.implementedTypes = reflection.implementedTypes.map((r) => typeToJsonApi(r))
@@ -213,11 +220,31 @@ function addRelationshipToResource(child: TSResource, relationship: string, reso
   }
 }
 
-function addSingleRelationshipToResource(child: TSAttributesObject | TSResource | TSType, relationship: string, resource: TSResource) {
-  resource.attributes[relationship] = child;
+function addChildToResource(child: TSAttributesObject, relationship: string, resource: TSResource) {
+  if (relationship === 'parameters' ||
+    relationship === 'callSignatures' ||
+    relationship === 'constructors' ||
+    relationship === 'typeLiterals' ||
+    relationship === 'interfaces' ||
+    relationship === 'properties' ||
+    relationship === 'constructors' ||
+    relationship === 'constructorSignatures' ||
+    relationship === 'typeAliases' ||
+    relationship === 'indexSignatures' ||
+    relationship === 'methods' ||
+    relationship === 'properties' ||
+    relationship === 'variables' ||
+    relationship === 'functions' ||
+    relationship === 'variables' ||
+    relationship === 'objectLiterals' ||
+    relationship === 'typeParameters') {
+    _addChildToResource(child, relationship, resource);
+  } else {
+    console.log(relationship);
+  }
 }
 
-function addChildToResource(child: TSAttributesObject, relationship: string, resource: TSResource) {
+function _addChildToResource(child: TSAttributesObject, relationship: TSRelationship, resource: TSResource) {
   if (resource.attributes[relationship]) {
     resource.attributes[relationship].push(child);
   } else {
@@ -246,7 +273,7 @@ function extract(reflection: Reflection, recurse: boolean = true): ResourceExtra
     reflection instanceof Reflections.SignatureReflection)
     && reflection.type
   ) {
-    addSingleRelationshipToResource(typeToJsonApi(reflection.type, false), 'type', extractedRoot);
+    extractedRoot.attributes.type = typeToJsonApi(reflection.type, false);
   }
 
   if (reflection instanceof Reflections.DeclarationReflection && reflection.extendedTypes) {
@@ -260,6 +287,8 @@ function extract(reflection: Reflection, recurse: boolean = true): ResourceExtra
       const { normalized, resource, identifier, included } = extract(child);
 
       extractedNormalized = extractedNormalized.concat(included);
+
+      //console.log(camelify(GroupPlugin.getKindPlural(child.kind)));
       
       if (meta && meta.normalize) {
         addRelationshipToResource(resource, camelify(GroupPlugin.getKindPlural(child.kind)), extractedRoot);

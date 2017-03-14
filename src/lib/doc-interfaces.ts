@@ -5,6 +5,7 @@ import {
 } from './json-api-interfaces';
 
 import { ISourceReference } from 'typedoc/dist/lib/models/sources/file';
+import { SourceDirectory } from 'typedoc/dist/lib/models/sources/directory';
 import { Comment } from 'typedoc/dist/lib/models/comments/comment';
 
 export interface DocSetManifest {
@@ -51,17 +52,35 @@ export interface TSType {
   types?: TSType[]
 }
 
-export interface TSAttributesObject extends AttributesObject {
+export interface TSAttributesObject {
   name?: string;
   comment?: Comment;
   sources?: ISourceReference[];
-  constructors?: TSResource[];
-  callSignatures?: TSResource[];
-  properties?: TSResource[];
-  parameters?: TSResource[];
+  flags: TSResourceFlags;
   type?: TSType;
   slug: string;
   alias: string;
+  packageInfo?: Object;
+  readme?: string;
+  implementedTypes?: TSType[];
+  extendedTypes?: TSType[];
+  fullName?: string;
+  hierarchy?: string;
+
+  constructors?: TSAttributesObject[];
+  callSignatures?: TSAttributesObject[];
+  properties?: TSAttributesObject[];
+  parameters?: TSAttributesObject[];
+  typeLiterals?: TSAttributesObject[];
+  interfaces?: TSAttributesObject[];
+  constructorSignatures?: TSAttributesObject[];
+  indexSignatures?: TSAttributesObject[];
+  typeAliases?: TSAttributesObject[];
+  methods?: TSAttributesObject[];
+  variables?: TSAttributesObject[];
+  functions?: TSAttributesObject[];
+  objectLiterals?: TSAttributesObject[];
+  typeParameters?: TSAttributesObject[];
 }
 
 export interface TSResourceFlags {
@@ -83,3 +102,39 @@ export interface TSTypeLink {
   sources: ISourceReference[],
   parent?: TSTypeLink
 };
+
+export type TSRelationship = 'callSignatures' |
+  'parameters' |
+  'typeLiterals' |
+  'callSignatures' |
+  'constructors' |
+  'interfaces' |
+  'constructorSignatures' |
+  'typeAliases' |
+  'indexSignatures' |
+  'methods' |
+  'properties' |
+  'variables' |
+  'functions' |
+  'objectLiterals' |
+  'typeParameters';
+
+export function isValidRelationshipString(relationship: string) {
+  return relationship === 'parameters' ||
+    relationship === 'callSignatures' ||
+    relationship === 'constructors' ||
+    relationship === 'typeLiterals' ||
+    relationship === 'interfaces' ||
+    relationship === 'properties' ||
+    relationship === 'constructors' ||
+    relationship === 'constructorSignatures' ||
+    relationship === 'typeAliases' ||
+    relationship === 'indexSignatures' ||
+    relationship === 'methods' ||
+    relationship === 'properties' ||
+    relationship === 'variables' ||
+    relationship === 'functions' ||
+    relationship === 'variables' ||
+    relationship === 'objectLiterals' ||
+    relationship === 'typeParameters';
+}
