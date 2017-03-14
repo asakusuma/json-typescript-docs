@@ -61,13 +61,15 @@ export interface TSType {
 }
 
 export interface TSAttributesObject {
-  name?: string;
-  comment?: Comment;
-  sources?: ISourceReference[];
-  flags: TSResourceFlags;
-  type?: TSType;
+  kindString: string;
   slug: string;
   alias: string;
+  flags: TSResourceFlags;
+  name: string;
+  
+  comment?: Comment;
+  sources?: ISourceReference[];
+  type?: TSType;
   packageInfo?: Object;
   readme?: string;
   implementedTypes?: TSType[];

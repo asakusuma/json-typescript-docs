@@ -158,6 +158,7 @@ function reflectionToJsonApi(reflection: Reflection): TSResource {
   const alias = reflection.getAlias();
   const fullName = reflection.getFullName();
   const hierarchy = reflection.toStringHierarchy();
+  const kindString = reflection.kindString;
 
   let attributes: TSAttributesObject = {
     name: reflection.name,
@@ -165,7 +166,8 @@ function reflectionToJsonApi(reflection: Reflection): TSResource {
     flags,
     alias,
     fullName,
-    hierarchy
+    hierarchy,
+    kindString
   };
 
   if (reflection instanceof Reflections.ProjectReflection) {

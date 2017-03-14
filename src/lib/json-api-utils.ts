@@ -21,3 +21,7 @@ export function camelify(str: string) {
   let string = str.toLowerCase().split(' ').map((word) => word.slice(0,1).toUpperCase() + word.slice(1)).join('');
   return string.slice(0,1).toLowerCase() + string.slice(1);
 }
+
+export function firstUpper(str: string) {
+  return str.slice(0,1).toUpperCase() + str.slice(1);
+}
