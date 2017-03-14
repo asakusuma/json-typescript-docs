@@ -1,3 +1,5 @@
+declare function require(name:string): any;
+
 import {
   TypeDocFilesJson,
   ProjectObject,
@@ -25,6 +27,8 @@ import { Reflection, ReflectionKind } from 'typedoc/dist/lib/models/reflections/
 import * as Reflections from 'typedoc/dist/lib/models/reflections/';
 import * as Types from 'typedoc/dist/lib/models/types';
 import { GroupPlugin } from 'typedoc/dist/lib/converter/plugins/GroupPlugin';
+
+const marked = require('marked');
 
 const kindMetaMap = {
   [ReflectionKind.Interface]: {
@@ -167,7 +171,7 @@ function reflectionToJsonApi(reflection: Reflection): TSResource {
   if (reflection instanceof Reflections.ProjectReflection) {
     const { packageInfo, readme } = reflection;
     attributes.packageInfo = packageInfo;
-    attributes.readme = readme;
+    attributes.readme = marked(readme);
   }
 
   if (reflection instanceof Reflections.DeclarationReflection) {
