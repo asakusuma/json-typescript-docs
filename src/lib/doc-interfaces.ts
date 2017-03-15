@@ -10,6 +10,32 @@ import { ISourceReference } from 'typedoc/dist/lib/models/sources/file';
 import { SourceDirectory } from 'typedoc/dist/lib/models/sources/directory';
 import { Comment } from 'typedoc/dist/lib/models/comments/comment';
 
+export interface OutputRoot {
+  data: {
+    id: string;
+    type: string;
+    attributes: RootAttributes,
+    relationships: {
+      docmodules: {
+        data: ResourceIdentifierObject[]
+      }
+    }
+  },
+  included: TSResource[]
+}
+
+export interface RootAttributes extends DocSetManifest {
+  idMap: ProjectIdMap
+}
+
+export interface ModuleIdMap {
+  [index: string]: string;
+}
+
+export interface ProjectIdMap {
+  [index: string]: ModuleIdMap;
+}
+
 export interface DocSetManifest {
   title: string;
   intro: string;

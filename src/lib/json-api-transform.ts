@@ -1,7 +1,8 @@
 import {
   DocSetManifest,
   TypeDocFilesJson,
-  DocSetJsonApi
+  DocSetJsonApi,
+  OutputRoot
 } from './doc-interfaces';
 
 import {
@@ -20,7 +21,7 @@ export default function jsonApiTransform(manifest: DocSetManifest, projects: Pro
     resources
   } = transformProjects(projects);
 
-  return {
+  const root: OutputRoot = {
     data: {
       id: slugify(manifest.title),
       type: 'docset',
@@ -37,4 +38,5 @@ export default function jsonApiTransform(manifest: DocSetManifest, projects: Pro
     },
     included: resources
   };
+  return root;
 }

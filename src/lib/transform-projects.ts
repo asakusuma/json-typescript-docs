@@ -11,7 +11,9 @@ import {
   TSChild,
   TSResourceFlags,
   TSTypeLink,
-  TSResourceIdentifierObject
+  TSResourceIdentifierObject,
+  ModuleIdMap,
+  ProjectIdMap
 } from './doc-interfaces';
 
 import {
@@ -50,14 +52,6 @@ const kindMetaMap = {
     normalize: true
   }
 };
-
-interface ModuleIdMap {
-  [index: string]: string;
-}
-
-interface ProjectIdMap {
-  [index: string]: ModuleIdMap;
-}
 
 export var GLOBAL_ID_MAP: ProjectIdMap = {};
 
@@ -337,6 +331,7 @@ export default function(projects: ProjectReflection[]) {
       console.log('Project could not be read');
     }
   }
+
   return {
     roots: roots.map(resourceToIdentifier),
     resources
