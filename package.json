@@ -1,7 +1,7 @@
 {
-  "name": "typedoc-transformer",
+  "name": "json-typescript-docs",
   "version": "0.0.1",
-  "description": "Transform typedoc JSON",
+  "description": "Create JSON file from TypeScript code.",
   "license": "MIT",
   "main": "main.js",
   "scripts": {
@@ -14,7 +14,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/asakusuma/typedoc-transformer"
+    "url": "https://github.com/asakusuma/json-typescript-docs"
   },
   "engines": {
     "node": ">= 0.10.0"
@@ -22,9 +22,9 @@
   "author": {
     "name": "Asa Kusuma"
   },
-  "homepage": "https://github.com/asakusuma/typedoc-transformer",
+  "homepage": "https://github.com/asakusuma/json-typescript-docs",
   "bin": {
-    "tdt": "./dist/main.js"
+    "jtd": "./dist/main.js"
   },
   "dependencies": {
     "jsonfile": "^2.4.0",
