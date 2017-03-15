@@ -1,5 +1,7 @@
 # typedoc-transformer
-Tool for transforming typedoc json to other formats
+Takes a set of TypeScript projects and creates a JSON file that can be used to create an API docs site. The output file is in [JSON API](http://jsonapi.org/format/) format.
+
+The exact format is described by a [TypeScript interface](https://github.com/asakusuma/typedoc-transformer/blob/master/src/lib/doc-interfaces.ts#L13).
 
 ```
 npm install -g typedoc-transformer
@@ -27,6 +29,8 @@ See [config schema](https://github.com/asakusuma/typedoc-transformer/blob/e54372
   "output": "out.json"
 }
 ```
+
+Note that the `src` path is the root path of the TypeScript sources, not necessarily the project root folder.
 
 ### 2. Run transform
 
