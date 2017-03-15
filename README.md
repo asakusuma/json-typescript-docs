@@ -11,7 +11,7 @@ The exact format is described by a [TypeScript interface](https://github.com/asa
 npm install -g json-typescript-docs
 ```
 
-###Step 1: Generate a config file
+### Step 1: Generate a config file
 
 See [config schema](https://github.com/asakusuma/json-typescript-docs/blob/e543724decceafe709317e4b0335fbb130ec2bb1/src/lib/cli-interfaces.ts#L5).
 
