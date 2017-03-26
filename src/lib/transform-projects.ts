@@ -39,6 +39,9 @@ const kindMetaMap = {
   [ReflectionKind.Class]: {
     normalize: true
   },
+  [ReflectionKind.Function]: {
+    normalize: true
+  },
   [ReflectionKind.ClassOrInterface]: {
     normalize: true
   },
@@ -203,7 +206,7 @@ function reflectionToJsonApi(reflection: Reflection): TSResource {
 }
 
 function addRelationshipToResource(child: TSResource, relationship: string, resource: TSResource) {
-  if (relationship === 'interfaces' || relationship === 'classes') {
+  if (relationship === 'interfaces' || relationship === 'classes' || relationship === 'functions') {
     const resourceId: TSResourceIdentifierObject = {
       type: child.type,
       id: child.id
