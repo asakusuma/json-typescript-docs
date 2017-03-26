@@ -1,5 +1,7 @@
 export interface ProjectConfig {
-    src: string
+    src: string;
+    include?: string[];
+    exclude?: string[];
 }
 
 export interface Config {

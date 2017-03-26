@@ -30,7 +30,18 @@ function main(inputPath: string, outputPath: string) {
 
     const projects = config.projects.map((project) => {
         let files = walkSync(project.src, { directories: false }).map((path: string) => project.src + path);
-        return app.convert(files);
+        let converted = app.convert(files);
+        if (project.include) {
+            converted.children = converted.children.filter(child => {
+                return project.include.indexOf(child.name) > -1;
+            });
+        }
+        if (project.exclude) {
+            converted.children = converted.children.filter(child => {
+                return project.exclude.indexOf(child.name) < 0;
+            });
+        }
+        return converted;
     });
 
     const transformed = transform(config.manifest, projects);
