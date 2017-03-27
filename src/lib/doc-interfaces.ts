@@ -6,7 +6,7 @@ import {
   RelationshipsObject
 } from './json-api-interfaces';
 
-import { ISourceReference } from 'typedoc/dist/lib/models/sources/file';
+import { SourceReference } from 'typedoc/dist/lib/models/sources/file';
 import { SourceDirectory } from 'typedoc/dist/lib/models/sources/directory';
 import { Comment } from 'typedoc/dist/lib/models/comments/comment';
 
@@ -94,7 +94,7 @@ export interface TSAttributesObject {
   name: string;
   
   comment?: Comment;
-  sources?: ISourceReference[];
+  sources?: SourceReference[];
   type?: TSType;
   packageInfo?: Object;
   readme?: string;
@@ -135,7 +135,7 @@ export interface TSTypeLink {
   id: string,
   type: string;
   slug: string;
-  sources: ISourceReference[],
+  sources: SourceReference[],
   parent?: TSTypeLink
 };
 

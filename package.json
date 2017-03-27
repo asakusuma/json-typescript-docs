@@ -34,7 +34,7 @@
   "devDependencies": {
     "@types/node": "^7.0.5",
     "slug": "^0.9.1",
-    "typedoc": "^0.5.7",
+    "typedoc": "0.5.9",
     "typescript": "^2.2.1"
   }
 }

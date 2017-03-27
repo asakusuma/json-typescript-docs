@@ -22,7 +22,7 @@ import {
   camelify
 } from './json-api-utils';
 
-import { ISourceReference } from 'typedoc/dist/lib/models/sources/file';
+import { SourceReference } from 'typedoc/dist/lib/models/sources/file';
 
 import { ProjectReflection } from 'typedoc/dist/lib/models/reflections/project';
 import { Reflection, ReflectionKind } from 'typedoc/dist/lib/models/reflections/abstract';
@@ -91,9 +91,9 @@ function toTypeLink(reflection: Reflection) {
   return link;
 }
 
-function flattenSource(source: ISourceReference) {
+function flattenSource(source: SourceReference) {
   let { fileName, line, character, url } = source;
-  const s: ISourceReference = {
+  const s: SourceReference = {
     fileName,
     line,
     character,
