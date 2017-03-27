@@ -1,7 +1,8 @@
 #!/usr/bin/env node
-declare function require(name:string): any;
-const { writeFileSync } = require('jsonfile');
-const walkSync = require('walk-sync');
+
+import { writeFileSync } from 'jsonfile';
+import walkSync = require('walk-sync');
+import path = require('path');
 
 import { readFileSync } from "fs";
 
@@ -29,7 +30,10 @@ function main(inputPath: string, outputPath: string) {
     });
 
     const projects = config.projects.map((project) => {
-        let files = walkSync(project.src, { directories: false }).map((path: string) => project.src + path);
+        let files = (walkSync(project.src, { directories: false }) as string[])
+            .map((path: string) => project.src + path)
+            .filter(filePath => path.extname(filePath) === '.ts');
+
         let converted = app.convert(files);
         if (project.include) {
             converted.children = converted.children.filter(child => {
