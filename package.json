@@ -1,6 +1,6 @@
 {
   "name": "json-typescript-docs",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Create JSON file from TypeScript code.",
   "license": "MIT",
   "main": "main.js",
