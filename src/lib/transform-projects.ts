@@ -97,12 +97,13 @@ function toTypeLink(reflection: Reflection) {
 }
 
 function flattenSource(source: SourceReference) {
-  let { fileName, line, character, url } = source;
+  let { fileName, line, character, url, file } = source;
+  const fileUrl = file && file.url;
   const s: SourceReference = {
     fileName,
     line,
     character,
-    url
+    url: url || fileUrl
   };
 
   return s;
@@ -173,6 +174,11 @@ function reflectionToJsonApi(reflection: Reflection): TSResource {
     const { packageInfo, readme } = reflection;
     attributes.packageInfo = packageInfo;
     attributes.readme = marked(readme);
+  }
+
+  if (reflection.comment) {
+    reflection.comment.shortText = marked(reflection.comment.shortText);
+    reflection.comment.text = marked(reflection.comment.text);
   }
 
   if (reflection instanceof Reflections.DeclarationReflection) {
