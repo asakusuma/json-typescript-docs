@@ -1,6 +1,10 @@
 declare function require(name:string): any;
 
 import {
+  MenuConfig
+} from './cli-interfaces';
+
+import {
   TypeDocFilesJson,
   ProjectObject,
   ProjectDoc,
@@ -253,10 +257,12 @@ function addChildToResource(child: TSAttributesObject, relationship: string, res
     relationship === 'functions' ||
     relationship === 'variables' ||
     relationship === 'objectLiterals' ||
+    relationship === 'getSignatures' ||
+    relationship === 'accessors' ||
     relationship === 'typeParameters') {
     _addChildToResource(child, relationship, resource);
   } else {
-    console.info('Unknown relationship: ' + relationship);
+    console.info('Unknown child relationship: ' + relationship);
   }
 }
 
@@ -321,18 +327,21 @@ function extract(reflection: Reflection, recurse: boolean = true): ResourceExtra
   };
 }
 
-export default function(projects: ProjectReflection[]) {
+//projects.map(({ reflection }) => reflection)
+
+export default function(projects: { menu: MenuConfig, reflection: ProjectReflection}[]) {
   let roots: TSResource[] = [];
   let resources: TSResource[] = [];
 
   for (let i = 0; i < projects.length; i++) {
-    const tdObj = projects[i];
+    const { reflection, menu } = projects[i];
 
-    if (tdObj) {
-      const { included, resource } = extract(tdObj);
+    if (reflection) {
+      const { included, resource } = extract(reflection);
 
-      resource.id = tdObj.getAlias();
+      resource.id = reflection.getAlias();
       resource.type = 'projectdoc';
+      resource.attributes.menu = menu;
 
       roots.push(resource);
       resources.push(resource);

@@ -6,6 +6,10 @@ import {
 } from './doc-interfaces';
 
 import {
+  MenuConfig
+} from './cli-interfaces';
+
+import {
   slugify
 } from './json-api-utils';
 
@@ -15,7 +19,7 @@ import {
 } from './transform-projects';
 import { ProjectReflection } from 'typedoc';
 
-export default function jsonApiTransform(manifest: DocSetManifest, projects: ProjectReflection[]): DocSetJsonApi {
+export default function jsonApiTransform(manifest: DocSetManifest, projects: { menu: MenuConfig, reflection: ProjectReflection}[]): DocSetJsonApi {
   const {
     roots,
     resources

@@ -35,17 +35,11 @@ function main(inputPath: string, outputPath: string) {
             .filter(filePath => path.extname(filePath) === '.ts');
 
         let converted = app.convert(files);
-        if (project.include) {
-            converted.children = converted.children.filter(child => {
-                return project.include.indexOf(child.name) > -1;
-            });
-        }
-        if (project.exclude) {
-            converted.children = converted.children.filter(child => {
-                return project.exclude.indexOf(child.name) < 0;
-            });
-        }
-        return converted;
+        const menu = project.menu || {};
+        return {
+            menu,
+            reflection: converted
+        };
     });
 
     const transformed = transform(config.manifest, projects);

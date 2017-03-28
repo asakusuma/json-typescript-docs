@@ -6,6 +6,10 @@ import {
   RelationshipsObject
 } from './json-api-interfaces';
 
+import {
+  MenuConfig
+} from './cli-interfaces';
+
 import { SourceReference } from 'typedoc/dist/lib/models/sources/file';
 import { SourceDirectory } from 'typedoc/dist/lib/models/sources/directory';
 import { Comment } from 'typedoc/dist/lib/models/comments/comment';
@@ -93,6 +97,7 @@ export interface TSAttributesObject {
   flags: TSResourceFlags;
   name: string;
   
+  menu?: MenuConfig;
   comment?: Comment;
   sources?: SourceReference[];
   typeInfo?: TSType;
@@ -110,6 +115,8 @@ export interface TSAttributesObject {
   typeLiterals?: TSAttributesObject[];
   interfaces?: TSAttributesObject[];
   constructorSignatures?: TSAttributesObject[];
+  accessors?: TSAttributesObject[];
+  getSignatures?: TSAttributesObject[];
   indexSignatures?: TSAttributesObject[];
   typeAliases?: TSAttributesObject[];
   methods?: TSAttributesObject[];
@@ -155,4 +162,6 @@ export type TSChild = 'callSignatures' |
   'variables' |
   'functions' |
   'objectLiterals' |
-  'typeParameters';
+  'typeParameters' |
+  'accessors' |
+  'getSignatures';
