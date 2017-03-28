@@ -283,7 +283,7 @@ function extract(reflection: Reflection, recurse: boolean = true): ResourceExtra
     reflection instanceof Reflections.SignatureReflection)
     && reflection.type
   ) {
-    extractedRoot.attributes.type = typeToJsonApi(reflection.type, false);
+    extractedRoot.attributes.typeInfo = typeToJsonApi(reflection.type, false);
   }
 
   if (reflection instanceof Reflections.DeclarationReflection && reflection.extendedTypes) {

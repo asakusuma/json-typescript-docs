@@ -95,7 +95,7 @@ export interface TSAttributesObject {
   
   comment?: Comment;
   sources?: SourceReference[];
-  type?: TSType;
+  typeInfo?: TSType;
   packageInfo?: Object;
   readme?: string;
   implementedTypes?: TSType[];
