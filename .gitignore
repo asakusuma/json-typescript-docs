@@ -41,3 +41,6 @@ output
 
 # Built node files
 dist
+
+# Typings files
+typings

@@ -3,14 +3,16 @@
   "version": "0.1.1",
   "description": "Create JSON file from TypeScript code.",
   "license": "MIT",
-  "main": "main.js",
+  "main": "dist/main.js",
+  "typings": "typings/main.d.ts",
   "scripts": {
     "exec": "node dist/main.js",
     "watch": "tsc -w",
     "prepublish": "tsc"
   },
   "files": [
-    "dist"
+    "dist",
+    "typings"
   ],
   "repository": {
     "type": "git",

@@ -16,6 +16,8 @@ import {
   ProjectIdMap
 } from './doc-interfaces';
 
+import { ResourceIdentifierObject } from './json-api-interfaces';
+
 import {
   resourceToIdentifier,
   slugify,

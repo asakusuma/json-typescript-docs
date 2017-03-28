@@ -53,3 +53,7 @@ function main(inputPath: string, outputPath: string) {
     writeFileSync(out, transformed, { spaces: 2 });
     console.log('Output file saved to: ' + out);
 }
+
+export * from './lib/json-api-interfaces';
+export * from './lib/doc-interfaces';
+export * from './lib/cli-interfaces';
