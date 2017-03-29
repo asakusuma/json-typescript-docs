@@ -30,6 +30,7 @@ export default function jsonApiTransform(manifest: DocSetManifest, projects: { m
       id: slugify(manifest.title),
       type: 'docset',
       attributes: {
+        header: manifest.header || manifest.title,
         title: manifest.title,
         intro: manifest.intro,
         idMap: GLOBAL_ID_MAP

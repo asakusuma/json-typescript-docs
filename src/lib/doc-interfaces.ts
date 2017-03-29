@@ -41,6 +41,7 @@ export interface ProjectIdMap {
 }
 
 export interface DocSetManifest {
+  header?: string;
   title: string;
   intro: string;
 }
