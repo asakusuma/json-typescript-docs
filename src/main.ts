@@ -27,6 +27,7 @@ function main(inputPath: string, outputPath: string) {
         logger: 'console',
         target: 'ES6',
         module: 'CommonJS',
+        experimentalDecorators: true
     });
 
     const projects = config.projects.map((project) => {
