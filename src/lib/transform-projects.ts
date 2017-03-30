@@ -181,8 +181,9 @@ function reflectionToJsonApi(reflection: Reflection): TSResource {
   }
 
   if (reflection.comment) {
+    const text = reflection.comment.text || reflection.comment.shortText;
     reflection.comment.shortText = marked(reflection.comment.shortText);
-    reflection.comment.text = marked(reflection.comment.text);
+    reflection.comment.text = marked(text);
   }
 
   if (reflection instanceof Reflections.DeclarationReflection) {
