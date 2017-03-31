@@ -103,6 +103,11 @@ function toTypeLink(reflection: Reflection) {
 function flattenSource(source: SourceReference) {
   let { fileName, line, character, url, file } = source;
   const fileUrl = file && file.url;
+
+  if (fileName.indexOf('/node_modules/') > -1) {
+    fileName = fileName.split('/node_modules/').pop();
+  }
+
   const s: SourceReference = {
     fileName,
     line,
@@ -299,11 +304,6 @@ function extract(reflection: Reflection, recurse: boolean = true): ResourceExtra
     extractedRoot.attributes.typeInfo = typeToJsonApi(reflection.type, false);
   }
 
-  if (reflection instanceof Reflections.DeclarationReflection && reflection.extendedTypes) {
-    // We don't want to include information about base types like Element or Window
-    recurse = recurse && !reflection.extendedTypes.some((type: any) => !type.reflection); 
-  }
-  
   if (recurse) {
     reflection.traverse((child) => {
       const meta = kindMetaMap[child.kind];
