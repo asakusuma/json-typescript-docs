@@ -85,7 +85,7 @@ function toTypeLink(reflection: Reflection) {
     id: String(reflection.id),
     type: slugify(reflection.kindString),
     slug: reflection.getAlias(),
-    sources: reflection.sources.map(flattenSource)
+    sources: reflection.sources ? reflection.sources.map(flattenSource) : null
   };
 
   if (parent) {
