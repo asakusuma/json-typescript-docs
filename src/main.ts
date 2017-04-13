@@ -1,8 +1,7 @@
 #!/usr/bin/env node
-
-import { writeFileSync } from 'jsonfile';
-import walkSync = require('walk-sync');
+import { writeFileSync } from "fs";
 import path = require('path');
+const walkSync: (path: string, options?: any) => string[] = require('walk-sync');
 
 import { readFileSync } from "fs";
 
@@ -32,7 +31,7 @@ function main(inputPath: string, outputPath: string) {
 
     const projects = config.projects.map((project) => {
         let files = (walkSync(project.src, { directories: false }) as string[])
-            .map((path: string) => project.src + path)
+            .map((file: string) => path.join(project.src, file))
             .filter(filePath => path.extname(filePath) === '.ts');
 
         let converted = app.convert(files);
@@ -45,7 +44,7 @@ function main(inputPath: string, outputPath: string) {
 
     const transformed = transform(config.manifest, projects);
     const out = config.output || outputPath;
-    writeFileSync(out, transformed, { spaces: 2 });
+    writeFileSync(out, JSON.stringify(transformed, null, 2));
     console.log('Output file saved to: ' + out);
 }
 

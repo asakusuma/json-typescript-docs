@@ -1,0 +1,10 @@
+{
+  "manifest" : {
+    "title": "My docs site",
+    "intro": "Everything is awesome"
+  },
+  "projects": [{
+    "src": "src"
+  }],
+  "output": "test/docs.json"
+}
