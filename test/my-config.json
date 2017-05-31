@@ -4,7 +4,7 @@
     "intro": "Everything is awesome"
   },
   "projects": [{
-    "src": "src"
+    "src": "tsconfig.json"
   }],
   "output": "test/docs.json"
 }
