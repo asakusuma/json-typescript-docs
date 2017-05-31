@@ -23,14 +23,14 @@ See [config schema](https://github.com/asakusuma/json-typescript-docs/blob/maste
   },
   "projects": [
     {
-      "src": "path/to/some/project"
+      "src": "path/to/some/project/tsconfig.json"
     }
   ],
   "output": "out.json"
 }
 ```
 
-Note that the `src` path is the root path of the TypeScript sources, not necessarily the project root folder.
+Note that the `src` can either be the path to the `tsconfig.json` or the root path of the TypeScript sources (not necessarily the project root folder).
 
 ### Step 2: Run transform
 
