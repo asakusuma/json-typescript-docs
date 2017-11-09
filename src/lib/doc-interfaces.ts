@@ -87,7 +87,6 @@ export interface TSType {
   name: string;
   link?: TSTypeLink;
   declaration?: TSResource;
-  isArray: boolean;
   types?: TSType[]
 }
 
