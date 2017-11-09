@@ -38,7 +38,7 @@ import { GroupPlugin } from 'typedoc/dist/lib/converter/plugins/GroupPlugin';
 
 const marked = require('marked');
 
-const kindMetaMap = {
+const kindMetaMap: { [index: number]: { normalize: boolean } | undefined } = {
   [ReflectionKind.Interface]: {
     normalize: true
   },
@@ -120,7 +120,6 @@ function flattenSource(source: SourceReference) {
 
 function typeToJsonApi(type: Types.Type, recurse: boolean = true): TSType {
   let typeJson: TSType = {
-    isArray: type.isArray,
     name: type.toString()
   };
   if (type instanceof Types.ReferenceType) {

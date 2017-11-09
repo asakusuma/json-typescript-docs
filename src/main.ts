@@ -87,14 +87,14 @@ function main(inputPath: string, outputPath: string) {
 
         while (queue.length) {
             let sourceFile = queue.pop();
-            seen[sourceFile.path] = true;
+            seen[sourceFile.fileName] = true;
             files.push(sourceFile.fileName);
             let imports = importMap[sourceFile.fileName];
             if (imports) {
                 imports.forEach((moduleResolution) => {
                     if (moduleResolution && !moduleResolution.isExternalLibraryImport) {
                         let sourceFile = program.getSourceFile(moduleResolution.resolvedFileName);
-                        if (!seen[sourceFile.path]) {
+                        if (!seen[sourceFile.fileName]) {
                             queue.push(sourceFile);
                         }
                     }
